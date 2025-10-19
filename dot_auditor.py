@@ -5,9 +5,6 @@ DoT (DNS-over-TLS) Auditor - A security audit tool for DNS-over-TLS servers.
 Analyzes TLS certificates on DNS servers running on port 853, performing
 comprehensive certificate validation and reporting.
 
-Copyright (c) 2025, Babak Farrokhi
-All rights reserved.
-
 SPDX-License-Identifier: BSD-2-Clause
 """
 

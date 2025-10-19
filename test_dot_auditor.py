@@ -1,7 +1,6 @@
 """
 Unit tests for DoT Auditor.
 
-Copyright (c) 2025, Babak Farrokhi
 SPDX-License-Identifier: BSD-2-Clause
 """
 

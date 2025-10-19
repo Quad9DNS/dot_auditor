@@ -215,9 +215,3 @@ This project relies on the following excellent open-source libraries:
 ## License
 
 This project is licensed under the BSD 2-Clause License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-**Babak Farrokhi**
-
-Copyright (c) 2025, Babak Farrokhi
