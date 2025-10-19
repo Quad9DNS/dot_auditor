@@ -102,7 +102,7 @@ python3 dot_auditor.py input.csv --format=markdown
 ```
 
 | IP | Domain | SNI Used | Matching NS | TLS | Leaf Cert | Chain Trusted | IP in Cert | Expired | Self-Signed | Issued By | CN(s) | SAN DNS | SAN IPs |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | `45.55.10.200` | `powerdns.com` | `pdns-public-ns2.powerdns.com` | `pdns-public-ns2.powerdns.com` | ✅ | ✅ | ✅ | YES | NO | NO | `Let's Encrypt (R12)` | `*.powerdns.com` | `*.powerdns.com`, `powerdns.com` | - |
 
 #### JSON
