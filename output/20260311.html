@@ -72,7 +72,7 @@
 <tr><td class="monospace">2001:67c:3c0::11</td><td class="monospace">hostnet.nl</td><td class="monospace">ns02.authdns.hostnet.nl</td><td class="monospace">ns02.authdns.hostnet.nl</td><td>✅</td><td>✅</td><td>✅</td><td>NO</td><td>NO</td><td>NO</td><td class="monospace">Let's Encrypt (E8)</td><td class="monospace">ns1.b-one.nu</td><td class="monospace">a.b-one-dns.net, b.b-one-dns.net, ns01.forward.antagonist.nl, ns01.hostnet.nl, ns01.no.brand.one.com, ns01.one.com, ns02.forward.antagonist.net, ns02.hostnet.nl, ns02.no.brand.one.com, ns02.one.com, ns1.b-one.nu, ns2.b-one.nu, pro-one.g1-dns.com, pro-one.g1-dns.one, webhostingserver.g1-dns.com, webhostingserver.g1-dns.one</td><td>-</td></tr>
 <tr><td class="monospace">129.134.30.12</td><td class="monospace">instagram.com</td><td class="monospace">a.ns.instagram.com</td><td class="monospace">a.ns.instagram.com</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td class="monospace">Facebook, Inc. (ns.facebook.com)</td><td class="monospace">ns.facebook.com</td><td class="monospace">*.ns.facebook.com, ns.facebook.com</td><td>-</td></tr>
 <tr><td class="monospace">185.89.219.12</td><td class="monospace">instagram.com</td><td class="monospace">d.ns.instagram.com</td><td class="monospace">d.ns.instagram.com</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td class="monospace">Facebook, Inc. (ns.facebook.com)</td><td class="monospace">ns.facebook.com</td><td class="monospace">*.ns.facebook.com, ns.facebook.com</td><td>-</td></tr>
-<tr><td class="monospace">112.82.212.172</td><td class="monospace">jycloudgslb.net</td><td class="monospace">ns1.jycloudgslb.net</td><td class="monospace">ns1.jycloudgslb.net</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td>NO</td><td class="monospace">CHINASSL Inc (CHINASSL Certification Authority)</td><td class="monospace">*.test.cn</td><td class="monospace">localhost, www.test.com, *.test.cn</td><td class="monospace">192.168.0.1, 127.0.0.1</td></tr>
+<tr><td class="monospace">112.82.212.172</td><td class="monospace">jycloudgslb.net</td><td class="monospace">jycloudgslb.net</td><td>-</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td>NO</td><td class="monospace">CHINASSL Inc (CHINASSL Certification Authority)</td><td class="monospace">*.test.cn</td><td class="monospace">localhost, www.test.com, *.test.cn</td><td class="monospace">192.168.0.1, 127.0.0.1</td></tr>
 <tr><td class="monospace">77.55.126.10</td><td class="monospace">kangur.org.pl</td><td class="monospace">ns2.nazwa.pl</td><td class="monospace">ns2.nazwa.pl</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td>NO</td><td class="monospace">nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)</td><td class="monospace">*.nazwa.pl</td><td class="monospace">*.nazwa.pl, nazwa.pl</td><td>-</td></tr>
 <tr><td class="monospace">2001:41d0:203:ddee::34</td><td class="monospace">khazarbeachhotel.com</td><td class="monospace">dns2.namebay.com</td><td class="monospace">dns2.namebay.com</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td>NO</td><td>NO</td><td class="monospace">Let's Encrypt (E8)</td><td class="monospace">dns2.swissquote.bank</td><td class="monospace">dns2.swissquote.bank</td><td>-</td></tr>
 <tr><td class="monospace">77.55.127.10</td><td class="monospace">lwowek.com.pl</td><td class="monospace">ns3.nazwa.pl</td><td class="monospace">ns3.nazwa.pl</td><td>✅</td><td>✅</td><td>❌</td><td>NO</td><td><span style="color: red; font-weight: bold;">YES</span></td><td>NO</td><td class="monospace">nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)</td><td class="monospace">*.nazwa.pl</td><td class="monospace">*.nazwa.pl, nazwa.pl</td><td>-</td></tr>
@@ -133,7 +133,8 @@
 <script>
 $(document).ready(function() {
   var table = $("#auditTable").DataTable({
-    "pageLength": 50,
+    "pageLength": -1,
+    "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
     "order": [],
     "columnDefs": [{ "orderable": true, "targets": "_all" }],
     "dom": "lfrtip<\"bottom-info\">",
@@ -143,7 +144,7 @@ $(document).ready(function() {
       "info": "Showing _START_ to _END_ of _TOTAL_ servers"
     },
     "drawCallback": function() {
-      $(".bottom-info").html('<div style="text-align: center; margin-top: 20px; color: #666;">Generated with <a href="https://github.com/Quad9DNS/dot_auditor">DoT Auditor</a> at 2026-03-11T14:13:56.069772 UTC</div>');
+      $(".bottom-info").html('<div style="text-align: center; margin-top: 20px; color: #666;">Generated with <a href="https://github.com/Quad9DNS/dot_auditor">DoT Auditor</a> at 2026-03-11T14:27:03.632773 UTC</div>');
     },
     "initComplete": function() {
       this.api().columns().every(function() {
