@@ -19,7 +19,7 @@ The work is split across two programs. `dot_auditor.py` collects the data and wr
 - Certificate analysis (CN, SAN, validity, chain trust, issuer)
 - IP address validation (checks if connected IP is listed in certificate SAN IPs)
 - JSON audit as the stored format, with a separate renderer for verbose, Markdown, and HTML reports
-- Self-signed and expired certificate detection with visual highlighting
+- Self-signed and expired certificate detection, flagged with clear status labels
 - Interactive HTML reports with DataTables (sorting, filtering, search)
 - Per-column filtering in HTML output
 - Concurrent processing with configurable workers
@@ -89,7 +89,7 @@ The collector emits a self-describing envelope: provenance about the run followe
 
 ```json
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "generated_at": "2026-07-10T12:00:00+00:00",
   "tool": "dot_auditor",
   "tool_version": "1.0.0",
@@ -111,6 +111,7 @@ The collector emits a self-describing envelope: provenance about the run followe
       "is_expired": false,
       "is_self_signed": false,
       "issued_by_trusted_ca": true,
+      "trust_error": null,
       "issuer_cn": "Let's Encrypt (R12)",
       "cn_list": ["*.powerdns.com"],
       "san_dns": ["*.powerdns.com", "powerdns.com"],
@@ -120,6 +121,8 @@ The collector emits a self-describing envelope: provenance about the run followe
   ]
 }
 ```
+
+`issued_by_trusted_ca` is tri-state: `true` (chain validates against the system CA store), `false` (a certificate was received but rejected), or `null` (the trust check could not complete, e.g. a timeout). When it is `false` or `null`, `trust_error` carries the reason. `connected_ip_in_cert` is computed only from the certificate's iPAddress SAN entries, never the CommonName.
 
 ### Report Formats
 
@@ -159,9 +162,9 @@ Formatted as a table for documentation and reports:
 python3 dot_report.py audit.json --format markdown
 ```
 
-| IP | Domain | SNI Used | Matching NS | TLS | Leaf Cert | Chain Trusted | IP in Cert | Expired | Self-Signed | Issued By | CN(s) | SAN DNS | SAN IPs |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| `45.55.10.200` | `powerdns.com` | `pdns-public-ns2.powerdns.com` | `pdns-public-ns2.powerdns.com` | ✅ | ✅ | ✅ | YES | NO | NO | `Let's Encrypt (R12)` | `*.powerdns.com` | `*.powerdns.com`, `powerdns.com` | - |
+| IP | Domain | SNI Used | Matching NS | TLS | Chain Trusted | IP in Cert | Expired | Self-Signed | Issued By | CN(s) | SAN DNS | SAN IPs |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `45.55.10.200` | `powerdns.com` | `pdns-public-ns2.powerdns.com` | `pdns-public-ns2.powerdns.com` | OK | TRUSTED | NO | VALID | CA-ISSUED | `Let's Encrypt (R12)` | `*.powerdns.com` | `*.powerdns.com`, `powerdns.com` | - |
 
 #### HTML
 
@@ -175,8 +178,9 @@ Features:
 - **Sortable columns**: Click any column header to sort
 - **Global search**: Filter across all columns at once
 - **Per-column filtering**: Individual search boxes for each column
-- **Pagination**: Navigate through large datasets (50 entries per page)
-- **Visual highlighting**: Expired and self-signed certificates shown in red
+- **Pagination**: Shows all rows by default, with a menu to page at 50, 100, or 200
+- **Status pills**: Certificate status shown as color-tinted text labels (`OK`, `TRUSTED`, `UNVERIFIED`, `EXPIRED`, `SELF-SIGNED`, and so on) that stay legible without color and are filterable as plain text
+- **Collapsible lists**: Long SAN lists show the first few names with a toggle to reveal the rest
 - **Column tooltips**: Hover over column headers for descriptions
 - **Provenance**: source file and collection time shown in the report header and footer
 - **Responsive design**: Works on desktop and mobile browsers
