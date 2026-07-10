@@ -1,0 +1,3186 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-10T20:54:47.398924+00:00",
+  "tool": "dot_auditor",
+  "tool_version": "1.0.0",
+  "source": "ns-input-small",
+  "params": {
+    "port": 853,
+    "timeout": 5.0
+  },
+  "results": [
+    {
+      "ip": "170.247.170.2",
+      "domain": ".",
+      "port": 853,
+      "matching_ns": [
+        "b.root-servers.net"
+      ],
+      "sni_used": "b.root-servers.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "170.247.170.2",
+      "not_before": "2025-06-18T16:06:12+00:00",
+      "not_after": "2035-06-16T16:06:12+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "B-Root (B-Root Certificate Authority)",
+      "cn_list": [
+        "b4-fra"
+      ],
+      "san_dns": [
+        "b4-fra"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "198.97.190.53",
+      "domain": ".",
+      "port": 853,
+      "matching_ns": [
+        "h.root-servers.net"
+      ],
+      "sni_used": "h.root-servers.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "198.97.190.53",
+      "not_before": "2026-03-23T15:58:11+00:00",
+      "not_after": "2027-03-23T15:58:11+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "hroot_ca",
+      "cn_list": [
+        "h.root-servers.net"
+      ],
+      "san_dns": [
+        "<fqdn>",
+        "h.root-servers.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:500:1::53",
+      "domain": ".",
+      "port": 853,
+      "matching_ns": [
+        "h.root-servers.net"
+      ],
+      "sni_used": "h.root-servers.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:500:1::53",
+      "not_before": "2026-03-23T15:58:11+00:00",
+      "not_after": "2027-03-23T15:58:11+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "hroot_ca",
+      "cn_list": [
+        "h.root-servers.net"
+      ],
+      "san_dns": [
+        "<fqdn>",
+        "h.root-servers.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2801:1b8:10::b",
+      "domain": ".",
+      "port": 853,
+      "matching_ns": [
+        "b.root-servers.net"
+      ],
+      "sni_used": "b.root-servers.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2801:1b8:10::b",
+      "not_before": "2025-06-18T16:06:12+00:00",
+      "not_after": "2035-06-16T16:06:12+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "B-Root (B-Root Certificate Authority)",
+      "cn_list": [
+        "b4-fra"
+      ],
+      "san_dns": [
+        "b4-fra"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "195.206.121.10",
+      "domain": "accessgo.de",
+      "port": 853,
+      "matching_ns": [
+        "ns01.one.com"
+      ],
+      "sni_used": "ns01.one.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "195.206.121.10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.10.11.10",
+      "domain": "adminbyrequest.com",
+      "port": 853,
+      "matching_ns": [
+        "ns02.one.com"
+      ],
+      "sni_used": "ns02.one.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.10.11.10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2602:f4d9:1::1",
+      "domain": "attestation.app",
+      "port": 853,
+      "matching_ns": [
+        "ns2.attestation.app"
+      ],
+      "sni_used": "ns2.attestation.app",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2602:f4d9:1::1",
+      "not_before": "2026-07-10T00:03:27+00:00",
+      "not_after": "2026-07-16T16:03:26+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [],
+      "san_dns": [
+        "ns2.attestation.app",
+        "ns2.grapheneos.app",
+        "ns2.grapheneos.ca",
+        "ns2.grapheneos.com",
+        "ns2.grapheneos.dev",
+        "ns2.grapheneos.foundation",
+        "ns2.grapheneos.info",
+        "ns2.grapheneos.net",
+        "ns2.grapheneos.network",
+        "ns2.grapheneos.online",
+        "ns2.grapheneos.org",
+        "ns2.grapheneos.ovh",
+        "ns2.grapheneos.page",
+        "ns2.grapheneos.social",
+        "ns2.seamlessupdate.app",
+        "ns2.vanadium.app"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:8d8:1801:8039::1",
+      "domain": "bmw.com",
+      "port": 853,
+      "matching_ns": [
+        "ns3.m-online.net"
+      ],
+      "sni_used": "ns3.m-online.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:8d8:1801:8039::1",
+      "not_before": "2026-06-01T09:55:57+00:00",
+      "not_after": "2026-08-30T09:55:56+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns3.m-online.net"
+      ],
+      "san_dns": [
+        "ns3.m-online.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:a60:0:20::53",
+      "domain": "bmw.com",
+      "port": 853,
+      "matching_ns": [
+        "ns4.m-online.net"
+      ],
+      "sni_used": "ns4.m-online.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:a60:0:20::53",
+      "not_before": "2026-06-22T00:55:47+00:00",
+      "not_after": "2026-09-20T00:55:46+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE2)",
+      "cn_list": [
+        "ns4.m-online.net"
+      ],
+      "san_dns": [
+        "ns4.m-online.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "212.114.171.64",
+      "domain": "bmw.com",
+      "port": 853,
+      "matching_ns": [
+        "ns4.m-online.net"
+      ],
+      "sni_used": "ns4.m-online.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "212.114.171.64",
+      "not_before": "2026-06-22T00:55:47+00:00",
+      "not_after": "2026-09-20T00:55:46+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE2)",
+      "cn_list": [
+        "ns4.m-online.net"
+      ],
+      "san_dns": [
+        "ns4.m-online.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "212.18.3.8",
+      "domain": "bmw.com",
+      "port": 853,
+      "matching_ns": [
+        "ns2.m-online.net"
+      ],
+      "sni_used": "ns2.m-online.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "212.18.3.8",
+      "not_before": "2026-06-22T12:25:46+00:00",
+      "not_after": "2026-09-20T12:25:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE2)",
+      "cn_list": [
+        "ns2.m-online.net"
+      ],
+      "san_dns": [
+        "ns2.m-online.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "217.160.41.67",
+      "domain": "bmw.com",
+      "port": 853,
+      "matching_ns": [
+        "ns3.m-online.net"
+      ],
+      "sni_used": "ns3.m-online.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "217.160.41.67",
+      "not_before": "2026-06-01T09:55:57+00:00",
+      "not_after": "2026-08-30T09:55:56+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns3.m-online.net"
+      ],
+      "san_dns": [
+        "ns3.m-online.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a0e:acc0:2::c:1:c1",
+      "domain": "cafczidenice2011.cz",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a0e:acc0:2::c:1:c1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "212.102.32.100",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.cdn77.org"
+      ],
+      "sni_used": "ns1.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "212.102.32.100",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "212.102.32.200",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.cdn77.org"
+      ],
+      "sni_used": "ns1.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "212.102.32.200",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:6ea0:cd00::1",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.cdn77.org"
+      ],
+      "sni_used": "ns2.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:6ea0:cd00::1",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:6ea0:cd00::2",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.cdn77.org"
+      ],
+      "sni_used": "ns2.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:6ea0:cd00::2",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:6ea0:cd77::1",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.cdn77.org"
+      ],
+      "sni_used": "ns1.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:6ea0:cd77::1",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:6ea0:cd77::2",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.cdn77.org"
+      ],
+      "sni_used": "ns1.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:6ea0:cd77::2",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "79.127.191.100",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.cdn77.org"
+      ],
+      "sni_used": "ns2.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "79.127.191.100",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "79.127.191.200",
+      "domain": "cdn77.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.cdn77.org"
+      ],
+      "sni_used": "ns2.cdn77.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "79.127.191.200",
+      "not_before": "2021-02-17T20:18:40+00:00",
+      "not_after": "2031-02-15T20:18:40+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns.cdn77.com",
+      "cn_list": [
+        "dns.cdn77.com"
+      ],
+      "san_dns": [
+        "dns.cdn77.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::13",
+      "domain": "cementonline.nl",
+      "port": 853,
+      "matching_ns": [
+        "ns01.hostnet.nl"
+      ],
+      "sni_used": "ns01.hostnet.nl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::13",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:3c0::13",
+      "domain": "cementonline.nl",
+      "port": 853,
+      "matching_ns": [
+        "ns02.hostnet.nl"
+      ],
+      "sni_used": "ns02.hostnet.nl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:3c0::13",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.65.56.134",
+      "domain": "childcareindex.co.uk",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "childcareindex.co.uk",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.65.56.134",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "62.141.38.216",
+      "domain": "consumabile-eu.ro",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "consumabile-eu.ro",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "62.141.38.216",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:4ba0:cafe:532::1",
+      "domain": "corvettegoodies.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "corvettegoodies.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:4ba0:cafe:532::1",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::10",
+      "domain": "dbzoo.com",
+      "port": 853,
+      "matching_ns": [
+        "ns01.one.com"
+      ],
+      "sni_used": "ns01.one.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "157.53.224.1",
+      "domain": "dedyn.io",
+      "port": 853,
+      "matching_ns": [
+        "ns2.desec.org"
+      ],
+      "sni_used": "ns2.desec.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "157.53.224.1",
+      "not_before": "2024-06-20T09:20:55+00:00",
+      "not_after": "2034-06-18T09:20:55+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "deSEC (ns2.desec.org)",
+      "cn_list": [
+        "ns2.desec.org"
+      ],
+      "san_dns": [
+        "ns2.desec.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "157.53.224.1",
+      "domain": "desec.io",
+      "port": 853,
+      "matching_ns": [
+        "ns2.desec.org"
+      ],
+      "sni_used": "ns2.desec.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "157.53.224.1",
+      "not_before": "2024-06-20T09:20:55+00:00",
+      "not_after": "2034-06-18T09:20:55+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "deSEC (ns2.desec.org)",
+      "cn_list": [
+        "ns2.desec.org"
+      ],
+      "san_dns": [
+        "ns2.desec.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a01:c8:ff00:201::134",
+      "domain": "detektei-bastin.de",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "detektei-bastin.de",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a01:c8:ff00:201::134",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "195.206.121.13",
+      "domain": "digitalaudience.io",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "digitalaudience.io",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "195.206.121.13",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a0e:acc0:1::caff:caff:cafb",
+      "domain": "dipat.eu",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a0e:acc0:1::caff:caff:cafb",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "129.134.31.12",
+      "domain": "facebook.com",
+      "port": 853,
+      "matching_ns": [
+        "b.ns.facebook.com"
+      ],
+      "sni_used": "b.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "129.134.31.12",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.89.218.12",
+      "domain": "facebook.com",
+      "port": 853,
+      "matching_ns": [
+        "c.ns.facebook.com"
+      ],
+      "sni_used": "c.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.89.218.12",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a03:2880:f0fc:c:face:b00c:0:35",
+      "domain": "facebook.com",
+      "port": 853,
+      "matching_ns": [
+        "a.ns.facebook.com"
+      ],
+      "sni_used": "a.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a03:2880:f0fc:c:face:b00c:0:35",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a03:2880:f1fc:c:face:b00c:0:35",
+      "domain": "facebook.com",
+      "port": 853,
+      "matching_ns": [
+        "c.ns.facebook.com"
+      ],
+      "sni_used": "c.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a03:2880:f1fc:c:face:b00c:0:35",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a03:2880:f1fd:c:face:b00c:0:35",
+      "domain": "facebook.com",
+      "port": 853,
+      "matching_ns": [
+        "d.ns.facebook.com"
+      ],
+      "sni_used": "d.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a03:2880:f1fd:c:face:b00c:0:35",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "195.206.121.10",
+      "domain": "falseknees.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "falseknees.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "195.206.121.10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:3c0::10",
+      "domain": "falseknees.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "falseknees.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:3c0::10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.10.11.11",
+      "domain": "g1-dns.one",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.one"
+      ],
+      "sni_used": "auth.g1-dns.one",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.10.11.11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::11",
+      "domain": "g1-dns.one",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.com"
+      ],
+      "sni_used": "auth.g1-dns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "139.91.1.1",
+      "domain": "gr",
+      "port": 853,
+      "matching_ns": [
+        "grdns.ics.forth.gr"
+      ],
+      "sni_used": "grdns.ics.forth.gr",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "139.91.1.1",
+      "not_before": "2025-12-19T13:18:50+00:00",
+      "not_after": "2026-12-19T13:18:50+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Hellenic Academic and Research Institutions CA (GEANT TLS RSA 1)",
+      "cn_list": [
+        "grdns.ics.forth.gr"
+      ],
+      "san_dns": [
+        "grdns.ics.forth.gr"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "139.91.191.3",
+      "domain": "gr",
+      "port": 853,
+      "matching_ns": [
+        "estia.ics.forth.gr"
+      ],
+      "sni_used": "estia.ics.forth.gr",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "139.91.191.3",
+      "not_before": "2025-10-17T07:54:59+00:00",
+      "not_after": "2026-10-17T07:54:59+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Hellenic Academic and Research Institutions CA (GEANT TLS RSA 1)",
+      "cn_list": [
+        "estia.ics.forth.gr"
+      ],
+      "san_dns": [
+        "estia.ics.forth.gr"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "194.0.4.10",
+      "domain": "gr",
+      "port": 853,
+      "matching_ns": [
+        "gr-m.ics.forth.gr"
+      ],
+      "sni_used": "gr-m.ics.forth.gr",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "194.0.4.10",
+      "not_before": "2025-10-22T11:25:50+00:00",
+      "not_after": "2026-10-22T11:25:50+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Hellenic Academic and Research Institutions CA (GEANT TLS RSA 1)",
+      "cn_list": [
+        "gr-m.ics.forth.gr"
+      ],
+      "san_dns": [
+        "gr-m.ics.forth.gr"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "23.149.125.1",
+      "domain": "grapheneos.network",
+      "port": 853,
+      "matching_ns": [
+        "ns2.grapheneos.network"
+      ],
+      "sni_used": "ns2.grapheneos.network",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "23.149.125.1",
+      "not_before": "2026-07-10T00:03:27+00:00",
+      "not_after": "2026-07-16T16:03:26+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [],
+      "san_dns": [
+        "ns2.attestation.app",
+        "ns2.grapheneos.app",
+        "ns2.grapheneos.ca",
+        "ns2.grapheneos.com",
+        "ns2.grapheneos.dev",
+        "ns2.grapheneos.foundation",
+        "ns2.grapheneos.info",
+        "ns2.grapheneos.net",
+        "ns2.grapheneos.network",
+        "ns2.grapheneos.online",
+        "ns2.grapheneos.org",
+        "ns2.grapheneos.ovh",
+        "ns2.grapheneos.page",
+        "ns2.grapheneos.social",
+        "ns2.seamlessupdate.app",
+        "ns2.vanadium.app"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2602:f4d9::1",
+      "domain": "grapheneos.network",
+      "port": 853,
+      "matching_ns": [
+        "ns1.grapheneos.network"
+      ],
+      "sni_used": "ns1.grapheneos.network",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2602:f4d9::1",
+      "not_before": "2026-07-07T18:45:54+00:00",
+      "not_after": "2026-07-14T10:45:53+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [],
+      "san_dns": [
+        "ns1.attestation.app",
+        "ns1.grapheneos.app",
+        "ns1.grapheneos.ca",
+        "ns1.grapheneos.com",
+        "ns1.grapheneos.dev",
+        "ns1.grapheneos.foundation",
+        "ns1.grapheneos.info",
+        "ns1.grapheneos.net",
+        "ns1.grapheneos.network",
+        "ns1.grapheneos.online",
+        "ns1.grapheneos.org",
+        "ns1.grapheneos.ovh",
+        "ns1.grapheneos.page",
+        "ns1.grapheneos.social",
+        "ns1.seamlessupdate.app",
+        "ns1.vanadium.app"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "91.134.185.34",
+      "domain": "gyorinsen.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "gyorinsen.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "91.134.185.34",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "45.138.106.1",
+      "domain": "heat-install.cz",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "45.138.106.1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:3c0::11",
+      "domain": "hostnet.nl",
+      "port": 853,
+      "matching_ns": [
+        "ns02.authdns.hostnet.nl"
+      ],
+      "sni_used": "ns02.authdns.hostnet.nl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:3c0::11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "129.134.30.12",
+      "domain": "instagram.com",
+      "port": 853,
+      "matching_ns": [
+        "a.ns.instagram.com"
+      ],
+      "sni_used": "a.ns.instagram.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "129.134.30.12",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.89.219.12",
+      "domain": "instagram.com",
+      "port": 853,
+      "matching_ns": [
+        "d.ns.instagram.com"
+      ],
+      "sni_used": "d.ns.instagram.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.89.219.12",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "112.82.212.172",
+      "domain": "jycloudgslb.net",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "jycloudgslb.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "112.82.212.172",
+      "not_before": "2021-01-07T08:48:12+00:00",
+      "not_after": "2022-01-07T08:48:12+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "CHINASSL Inc (CHINASSL Certification Authority)",
+      "cn_list": [
+        "*.test.cn"
+      ],
+      "san_dns": [
+        "localhost",
+        "www.test.com",
+        "*.test.cn"
+      ],
+      "san_ips": [
+        "192.168.0.1",
+        "127.0.0.1"
+      ],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "77.55.126.10",
+      "domain": "kangur.org.pl",
+      "port": 853,
+      "matching_ns": [
+        "ns2.nazwa.pl"
+      ],
+      "sni_used": "ns2.nazwa.pl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "77.55.126.10",
+      "not_before": "2025-01-10T08:23:12+00:00",
+      "not_after": "2026-01-06T00:00:00+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)",
+      "cn_list": [
+        "*.nazwa.pl"
+      ],
+      "san_dns": [
+        "*.nazwa.pl",
+        "nazwa.pl"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:41d0:203:ddee::34",
+      "domain": "khazarbeachhotel.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "khazarbeachhotel.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:41d0:203:ddee::34",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "77.55.127.10",
+      "domain": "lwowek.com.pl",
+      "port": 853,
+      "matching_ns": [
+        "ns3.nazwa.pl"
+      ],
+      "sni_used": "ns3.nazwa.pl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "77.55.127.10",
+      "not_before": "2025-01-10T08:23:12+00:00",
+      "not_after": "2026-01-06T00:00:00+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)",
+      "cn_list": [
+        "*.nazwa.pl"
+      ],
+      "san_dns": [
+        "*.nazwa.pl",
+        "nazwa.pl"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "62.141.38.216",
+      "domain": "namebay.com",
+      "port": 853,
+      "matching_ns": [
+        "ns2.namebay.com"
+      ],
+      "sni_used": "ns2.namebay.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "62.141.38.216",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "77.55.125.10",
+      "domain": "nazwa.pl",
+      "port": 853,
+      "matching_ns": [
+        "ns1.nazwa.pl"
+      ],
+      "sni_used": "ns1.nazwa.pl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "77.55.125.10",
+      "not_before": "2025-01-10T08:23:12+00:00",
+      "not_after": "2026-01-06T00:00:00+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)",
+      "cn_list": [
+        "*.nazwa.pl"
+      ],
+      "san_dns": [
+        "*.nazwa.pl",
+        "nazwa.pl"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "77.55.126.10",
+      "domain": "netart.pl",
+      "port": 853,
+      "matching_ns": [
+        "ns2.nazwa.pl"
+      ],
+      "sni_used": "ns2.nazwa.pl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "77.55.126.10",
+      "not_before": "2025-01-10T08:23:12+00:00",
+      "not_after": "2026-01-06T00:00:00+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)",
+      "cn_list": [
+        "*.nazwa.pl"
+      ],
+      "san_dns": [
+        "*.nazwa.pl",
+        "nazwa.pl"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a03:2880:f0fd:c:face:b00c:0:35",
+      "domain": "oculus.com",
+      "port": 853,
+      "matching_ns": [
+        "b.ns.facebook.com"
+      ],
+      "sni_used": "b.ns.facebook.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a03:2880:f0fd:c:face:b00c:0:35",
+      "not_before": "2026-07-01T06:06:35+00:00",
+      "not_after": "2026-09-29T06:06:35+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Facebook, Inc. (ns.facebook.com)",
+      "cn_list": [
+        "ns.facebook.com"
+      ],
+      "san_dns": [
+        "*.ns.facebook.com",
+        "ns.facebook.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "45.138.106.1",
+      "domain": "ogel.cz",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "45.138.106.1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.10.11.11",
+      "domain": "one.com",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.one"
+      ],
+      "sni_used": "auth.g1-dns.one",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.10.11.11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "195.206.121.11",
+      "domain": "one.com",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.com"
+      ],
+      "sni_used": "auth.g1-dns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "195.206.121.11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:3c0::11",
+      "domain": "one.com",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.one"
+      ],
+      "sni_used": "auth.g1-dns.one",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:3c0::11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "85.193.93.85",
+      "domain": "onehop.ru",
+      "port": 853,
+      "matching_ns": [
+        "ns2.timeweb.ru"
+      ],
+      "sni_used": "ns2.timeweb.ru",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "85.193.93.85",
+      "not_before": "2026-06-17T11:51:01+00:00",
+      "not_after": "2027-01-02T11:51:01+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "GlobalSign nv-sa (GlobalSign GCC R3 DV TLS CA 2020)",
+      "cn_list": [
+        "*.timeweb.ru"
+      ],
+      "san_dns": [
+        "*.timeweb.ru",
+        "timeweb.ru"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2604:a880:1:20::132:5001",
+      "domain": "powerdns.com",
+      "port": 853,
+      "matching_ns": [
+        "pdns-public-ns2.powerdns.com"
+      ],
+      "sni_used": "pdns-public-ns2.powerdns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2604:a880:1:20::132:5001",
+      "not_before": "2026-05-13T00:00:00+00:00",
+      "not_after": "2026-11-27T23:59:59+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Sectigo Limited (Sectigo Public Server Authentication CA DV E36)",
+      "cn_list": [
+        "*.powerdns.com"
+      ],
+      "san_dns": [
+        "*.powerdns.com",
+        "powerdns.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "45.55.10.200",
+      "domain": "powerdns.org",
+      "port": 853,
+      "matching_ns": [
+        "pdns-public-ns2.powerdns.com"
+      ],
+      "sni_used": "pdns-public-ns2.powerdns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "45.55.10.200",
+      "not_before": "2026-05-13T00:00:00+00:00",
+      "not_after": "2026-11-27T23:59:59+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Sectigo Limited (Sectigo Public Server Authentication CA DV E36)",
+      "cn_list": [
+        "*.powerdns.com"
+      ],
+      "san_dns": [
+        "*.powerdns.com",
+        "powerdns.com"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.8.238.1",
+      "domain": "pribram.cz",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.8.238.1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::11",
+      "domain": "proisp.no",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.com"
+      ],
+      "sni_used": "auth.g1-dns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.65.56.133",
+      "domain": "pure-tone.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "pure-tone.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.65.56.133",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "91.134.185.34",
+      "domain": "pure-tone.com",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "pure-tone.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "91.134.185.34",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "77.55.125.10",
+      "domain": "reporteryoung.pl",
+      "port": 853,
+      "matching_ns": [
+        "ns1.nazwa.pl"
+      ],
+      "sni_used": "ns1.nazwa.pl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "77.55.125.10",
+      "not_before": "2025-01-10T08:23:12+00:00",
+      "not_after": "2026-01-06T00:00:00+00:00",
+      "is_expired": true,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "nazwa.pl Sp. z o.o. (nazwaSSL DV TLS G2 E29 CA)",
+      "cn_list": [
+        "*.nazwa.pl"
+      ],
+      "san_dns": [
+        "*.nazwa.pl",
+        "nazwa.pl"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.10.11.13",
+      "domain": "resquel.nl",
+      "port": 853,
+      "matching_ns": [
+        "ns02.hostnet.nl"
+      ],
+      "sni_used": "ns02.hostnet.nl",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.10.11.13",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:500:1::53",
+      "domain": "root-servers.net",
+      "port": 853,
+      "matching_ns": [
+        "h.root-servers.net"
+      ],
+      "sni_used": "h.root-servers.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:500:1::53",
+      "not_before": "2026-03-23T15:58:11+00:00",
+      "not_after": "2027-03-23T15:58:11+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "hroot_ca",
+      "cn_list": [
+        "h.root-servers.net"
+      ],
+      "san_dns": [
+        "<fqdn>",
+        "h.root-servers.net"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "139.45.249.139",
+      "domain": "rosatomint.net",
+      "port": 853,
+      "matching_ns": [
+        "ns4.timeweb.org"
+      ],
+      "sni_used": "ns4.timeweb.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "139.45.249.139",
+      "not_before": "2025-12-09T13:37:13+00:00",
+      "not_after": "2027-01-10T13:37:12+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "GlobalSign nv-sa (GlobalSign GCC R3 DV TLS CA 2020)",
+      "cn_list": [
+        "*.timeweb.org"
+      ],
+      "san_dns": [
+        "*.timeweb.org",
+        "timeweb.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::10",
+      "domain": "schemastore.org",
+      "port": 853,
+      "matching_ns": [
+        "ns01.one.com"
+      ],
+      "sni_used": "ns01.one.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a01:c8:ff00:201::133",
+      "domain": "smartphonefreeware.org",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "smartphonefreeware.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a01:c8:ff00:201::133",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.10.11.10",
+      "domain": "sportsgambler.com",
+      "port": 853,
+      "matching_ns": [
+        "ns02.one.com"
+      ],
+      "sni_used": "ns02.one.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.10.11.10",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "45.90.28.1",
+      "domain": "steering.nextdns.io",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "steering.nextdns.io",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "45.90.28.1",
+      "not_before": "2026-05-13T00:00:00+00:00",
+      "not_after": "2026-08-11T23:59:59+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "ZeroSSL GmbH (ZeroSSL ECC DV SSL CA 2)",
+      "cn_list": [
+        "dns.nextdns.io"
+      ],
+      "san_dns": [
+        "dns.nextdns.io",
+        "*.dns.nextdns.io"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "45.90.30.1",
+      "domain": "steering.nextdns.io",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "steering.nextdns.io",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "45.90.30.1",
+      "not_before": "2026-05-13T00:00:00+00:00",
+      "not_after": "2026-08-11T23:59:59+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "ZeroSSL GmbH (ZeroSSL ECC DV SSL CA 2)",
+      "cn_list": [
+        "dns.nextdns.io"
+      ],
+      "san_dns": [
+        "dns.nextdns.io",
+        "*.dns.nextdns.io"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "85.193.93.85",
+      "domain": "store123.ru",
+      "port": 853,
+      "matching_ns": [
+        "ns2.timeweb.ru"
+      ],
+      "sni_used": "ns2.timeweb.ru",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "85.193.93.85",
+      "not_before": "2026-06-17T11:51:01+00:00",
+      "not_after": "2027-01-02T11:51:01+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "GlobalSign nv-sa (GlobalSign GCC R3 DV TLS CA 2020)",
+      "cn_list": [
+        "*.timeweb.ru"
+      ],
+      "san_dns": [
+        "*.timeweb.ru",
+        "timeweb.ru"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.65.56.133",
+      "domain": "taviranyito.net",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "taviranyito.net",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.65.56.133",
+      "not_before": "2026-05-15T03:43:56+00:00",
+      "not_after": "2026-08-13T03:43:55+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "dns1.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns1.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "139.45.249.139",
+      "domain": "timeweb.RU",
+      "port": 853,
+      "matching_ns": [
+        "ns4.timeweb.org"
+      ],
+      "sni_used": "ns4.timeweb.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "139.45.249.139",
+      "not_before": "2025-12-09T13:37:13+00:00",
+      "not_after": "2027-01-10T13:37:12+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "GlobalSign nv-sa (GlobalSign GCC R3 DV TLS CA 2020)",
+      "cn_list": [
+        "*.timeweb.org"
+      ],
+      "san_dns": [
+        "*.timeweb.org",
+        "timeweb.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.65.56.134",
+      "domain": "ulimatbach.de",
+      "port": 853,
+      "matching_ns": [],
+      "sni_used": "ulimatbach.de",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.65.56.134",
+      "not_before": "2026-05-15T03:46:10+00:00",
+      "not_after": "2026-08-13T03:46:09+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E7)",
+      "cn_list": [
+        "dns2.swissquote.bank"
+      ],
+      "san_dns": [
+        "dns2.swissquote.bank"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "194.1.214.8",
+      "domain": "wb.ru",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wildberries.ru"
+      ],
+      "sni_used": "ns1.wildberries.ru",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "194.1.214.8",
+      "not_before": "2024-03-21T16:48:10+00:00",
+      "not_after": "2034-03-19T16:48:10+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Wildberries LLC",
+      "cn_list": [],
+      "san_dns": [],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "194.1.214.8",
+      "domain": "wbbasket.ru",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wildberries.ru"
+      ],
+      "sni_used": "ns1.wildberries.ru",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "194.1.214.8",
+      "not_before": "2024-03-21T16:48:10+00:00",
+      "not_after": "2034-03-19T16:48:10+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Wildberries LLC",
+      "cn_list": [],
+      "san_dns": [],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "195.206.121.11",
+      "domain": "webhostingserver.nl",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.com"
+      ],
+      "sni_used": "auth.g1-dns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "195.206.121.11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2001:67c:28cc::11",
+      "domain": "webhostingserver.nl",
+      "port": 853,
+      "matching_ns": [
+        "auth.g1-dns.com"
+      ],
+      "sni_used": "auth.g1-dns.com",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2001:67c:28cc::11",
+      "not_before": "2026-05-18T09:30:48+00:00",
+      "not_after": "2026-08-16T09:30:47+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (E8)",
+      "cn_list": [
+        "ns1.b-one.nu"
+      ],
+      "san_dns": [
+        "a.b-one-dns.net",
+        "b.b-one-dns.net",
+        "ns01.forward.antagonist.nl",
+        "ns01.hostnet.nl",
+        "ns01.no.brand.one.com",
+        "ns01.one.com",
+        "ns02.forward.antagonist.net",
+        "ns02.hostnet.nl",
+        "ns02.no.brand.one.com",
+        "ns02.one.com",
+        "ns1.b-one.nu",
+        "ns2.b-one.nu",
+        "pro-one.g1-dns.com",
+        "pro-one.g1-dns.one",
+        "webhostingserver.g1-dns.com",
+        "webhostingserver.g1-dns.one"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "185.8.238.1",
+      "domain": "wedos.com",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "185.8.238.1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a0e:acc0:2::c:1:c1",
+      "domain": "wedos.cz",
+      "port": 853,
+      "matching_ns": [
+        "ns.wedos.cz"
+      ],
+      "sni_used": "ns.wedos.cz",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a0e:acc0:2::c:1:c1",
+      "not_before": "2026-04-20T11:36:45+00:00",
+      "not_after": "2036-04-18T11:36:45+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "dns-ac112-c-55cff79454-kv5js",
+      "cn_list": [],
+      "san_dns": [
+        "dns-ac112-c-55cff79454-kv5js"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2620:0:861:53::1",
+      "domain": "wikidata.org",
+      "port": 853,
+      "matching_ns": [
+        "ns0.wikimedia.org"
+      ],
+      "sni_used": "ns0.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2620:0:861:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "198.35.27.27",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "198.35.27.27",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "208.80.153.231",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wikimedia.org"
+      ],
+      "sni_used": "ns1.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "208.80.153.231",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "208.80.154.238",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns0.wikimedia.org"
+      ],
+      "sni_used": "ns0.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "208.80.154.238",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2620:0:860:53::1",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wikimedia.org"
+      ],
+      "sni_used": "ns1.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2620:0:860:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2620:0:861:53::1",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns0.wikimedia.org"
+      ],
+      "sni_used": "ns0.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2620:0:861:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:ec80:53::1",
+      "domain": "wikimedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:ec80:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "198.35.27.27",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "198.35.27.27",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "208.80.153.231",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wikimedia.org"
+      ],
+      "sni_used": "ns1.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "208.80.153.231",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "208.80.154.238",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns0.wikimedia.org"
+      ],
+      "sni_used": "ns0.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "208.80.154.238",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2620:0:860:53::1",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns1.wikimedia.org"
+      ],
+      "sni_used": "ns1.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2620:0:860:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2620:0:861:53::1",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns0.wikimedia.org"
+      ],
+      "sni_used": "ns0.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2620:0:861:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:ec80:53::1",
+      "domain": "wikipedia.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:ec80:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "198.35.27.27",
+      "domain": "wiktionary.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "198.35.27.27",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "2a02:ec80:53::1",
+      "domain": "wiktionary.org",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wikimedia.org"
+      ],
+      "sni_used": "ns2.wikimedia.org",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "2a02:ec80:53::1",
+      "not_before": "2026-07-09T00:54:37+00:00",
+      "not_after": "2026-10-07T00:54:36+00:00",
+      "is_expired": false,
+      "is_self_signed": false,
+      "issued_by_trusted_ca": true,
+      "issuer_cn": "Let's Encrypt (YE1)",
+      "cn_list": [
+        "ns0.wikimedia.org"
+      ],
+      "san_dns": [
+        "ns0.wikimedia.org",
+        "ns1.wikimedia.org",
+        "ns2.wikimedia.org"
+      ],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    },
+    {
+      "ip": "91.230.107.70",
+      "domain": "wildberries.ru",
+      "port": 853,
+      "matching_ns": [
+        "ns2.wildberries.ru"
+      ],
+      "sni_used": "ns2.wildberries.ru",
+      "tls_ok": true,
+      "error_tls": null,
+      "leaf_cert_received": true,
+      "connected_ip": "91.230.107.70",
+      "not_before": "2024-03-21T16:48:10+00:00",
+      "not_after": "2034-03-19T16:48:10+00:00",
+      "is_expired": false,
+      "is_self_signed": true,
+      "issued_by_trusted_ca": false,
+      "issuer_cn": "Wildberries LLC",
+      "cn_list": [],
+      "san_dns": [],
+      "san_ips": [],
+      "connected_ip_in_cert": false
+    }
+  ]
+}
