@@ -33,6 +33,7 @@ def _result(**overrides):
         "is_expired": False,
         "is_self_signed": False,
         "issued_by_trusted_ca": True,
+        "trust_error": None,
         "issuer_cn": "Let's Encrypt Authority X3",
         "connected_ip_in_cert": False,
     }
@@ -122,6 +123,14 @@ class TestHtmlDensity:
         assert "✅" not in out and "❌" not in out
         # A severity word carries meaning without relying on color.
         assert "TRUSTED" in out
+
+    def test_chain_unknown_state_is_distinct_from_untrusted(self):
+        """A trust check that could not run reads UNKNOWN, not UNVERIFIED, keeping the error."""
+        out = dot_report.format_html([_result(
+            issued_by_trusted_ca=None, trust_error="TimeoutError: timed out")])
+        assert "UNKNOWN" in out
+        assert "UNVERIFIED" not in out
+        assert 'title="TimeoutError: timed out"' in out  # error retained on hover
 
     def test_chain_status_words_are_filter_disjoint(self):
         """Per-column filters match substrings, so no negative label may contain a positive one.
