@@ -70,7 +70,7 @@ class TestCertHelpers:
         assert len(result) == 2  # de-duped
 
     def test_names_from_cert_with_san(self):
-        """Test names_from_cert with SAN entries."""
+        """SAN lists are literal; the CommonName is reported separately, not folded in."""
         cert = {
             "subject": ((("commonName", "example.com"),),),
             "subjectAltName": (
@@ -81,11 +81,26 @@ class TestCertHelpers:
         }
         cn_list, san_dns, san_ips = dot_auditor.names_from_cert(cert)
 
-        assert "example.com" in cn_list
-        assert "example.com" in san_dns  # CN added to DNS list
-        assert "www.example.com" in san_dns
-        assert "mail.example.com" in san_dns
-        assert "192.168.1.1" in san_ips
+        assert cn_list == ["example.com"]
+        assert san_dns == ["www.example.com", "mail.example.com"]
+        assert "example.com" not in san_dns  # CN is not folded into the SAN list
+        assert san_ips == ["192.168.1.1"]
+
+    def test_cn_ip_is_not_folded_into_san_ips(self):
+        """A CN that is an IP address must not appear as a SAN IP.
+
+        Otherwise a CN=<ip> certificate with no iPAddress SAN would falsely
+        satisfy the connected-IP-in-cert check, which must consult SAN only.
+        """
+        cert = {
+            "subject": ((("commonName", "192.0.2.1"),),),
+            "subjectAltName": (("DNS", "example.com"),),  # no IP SAN
+        }
+        cn_list, san_dns, san_ips = dot_auditor.names_from_cert(cert)
+
+        assert cn_list == ["192.0.2.1"]
+        assert san_ips == []  # the CN's IP did not leak into the SAN-IP list
+        assert san_dns == ["example.com"]
 
     def test_names_from_cert_normalizes_ipv6_san(self):
         """SAN IPv6 entries are canonicalized, not kept as the CA wrote them.
@@ -279,6 +294,19 @@ class TestConnectedIPInCert:
     def test_different_address_does_not_match(self):
         """A genuinely absent address still reports no."""
         assert self._connected_ip_in_cert_for("192.0.2.1", "198.51.100.1") is False
+
+    def test_cn_only_ip_does_not_count_as_in_cert(self):
+        """The connected IP present only in the CN, not any iPAddress SAN, reports no."""
+        cert = {
+            "subject": ((("commonName", "192.0.2.1"),),),
+            "issuer": ((("commonName", "Example CA"),),),
+            "subjectAltName": (("DNS", "example.com"),),  # no IP SAN
+        }
+        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
+            with patch('dot_auditor.tls_handshake_to_ip',
+                      return_value=(True, cert, "192.0.2.1", None)):
+                result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
+        assert result["connected_ip_in_cert"] is False
 
 
 class TestSelfSigned:
