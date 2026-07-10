@@ -4,6 +4,8 @@ Unit tests for DoT Auditor.
 SPDX-License-Identifier: BSD-2-Clause
 """
 
+import re
+
 import pytest
 from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
@@ -279,6 +281,43 @@ class TestFormatters:
         assert '"ip": "192.168.1.1"' in output
         assert '"domain": "example.com"' in output
         assert '"tls_ok": true' in output
+
+
+class TestOutputInjection:
+    """Certificate fields are attacker-controlled and must not break the output."""
+
+    @staticmethod
+    def _hostile_result():
+        """A result whose cert-derived fields carry HTML and Markdown metacharacters."""
+        return {
+            "ip": "192.0.2.1", "domain": "evil.example", "port": 853,
+            "matching_ns": [], "sni_used": None, "tls_ok": True, "error_tls": None,
+            "leaf_cert_received": True, "connected_ip": "192.0.2.1",
+            "not_before": "2025-01-01T00:00:00+00:00",
+            "not_after": "2030-01-01T00:00:00+00:00",
+            "is_expired": False, "is_self_signed": False,
+            "issued_by_trusted_ca": False,
+            "issuer_cn": "<script>alert(document.domain)</script>",
+            "cn_list": ['" onmouseover="alert(1)'],
+            "san_dns": ["a.evil | b.evil"], "san_ips": [],
+            "connected_ip_in_cert": False,
+        }
+
+    def test_html_escapes_script_and_attribute_payloads(self):
+        """No raw script tag or attribute breakout may reach the page."""
+        out = dot_auditor.format_html([self._hostile_result()])
+        assert "<script>alert(document.domain)</script>" not in out
+        assert '" onmouseover="alert(1)' not in out
+        assert "&lt;script&gt;" in out  # payload survives, inert
+
+    def test_markdown_pipe_does_not_add_a_column(self):
+        """A pipe in a SAN name must not shift the table's column count."""
+        out = dot_auditor.format_markdown([self._hostile_result()])
+        header, row = out.splitlines()[0], out.splitlines()[2]
+        # Only unescaped pipes act as column delimiters.
+        delimiters = lambda s: len(re.findall(r"(?<!\\)\|", s))
+        assert delimiters(row) == delimiters(header)
+        assert "\\|" in row  # the SAN pipe was escaped, not dropped
 
 
 class TestIntegration:

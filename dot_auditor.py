@@ -11,6 +11,7 @@ SPDX-License-Identifier: BSD-2-Clause
 import argparse
 import csv
 import concurrent.futures as cf
+import html
 import ipaddress
 import json
 import os
@@ -328,6 +329,16 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     return out
 
 
+def _md_cell(text: object) -> str:
+    """Neutralize Markdown table delimiters so cert-supplied text cannot break rows."""
+    return str(text).replace("|", "\\|").replace("\r", " ").replace("\n", " ")
+
+
+def _h(text: object) -> str:
+    """HTML-escape cert-supplied text, including quotes, for safe interpolation."""
+    return html.escape(str(text), quote=True)
+
+
 def format_verbose(results: list[dict]) -> str:
     """Format results as human-readable verbose output."""
     output = []
@@ -398,11 +409,11 @@ def format_markdown(results: list[dict]) -> str:
 
     for r in results:
         row = [
-            f"`{r['ip']}`",
-            f"`{r['domain']}`",
-            f"`{r['sni_used']}`" if r["sni_used"] else "-",
+            f"`{_md_cell(r['ip'])}`",
+            f"`{_md_cell(r['domain'])}`",
+            f"`{_md_cell(r['sni_used'])}`" if r["sni_used"] else "-",
             (
-                ", ".join(f"`{ns}`" for ns in r["matching_ns"])
+                ", ".join(f"`{_md_cell(ns)}`" for ns in r["matching_ns"])
                 if r["matching_ns"]
                 else "-"
             ),
@@ -424,10 +435,10 @@ def format_markdown(results: list[dict]) -> str:
                 if r["is_self_signed"]
                 else "NO" if r["is_self_signed"] is not None else "-"
             ),
-            f"`{r['issuer_cn']}`" if r["issuer_cn"] else "-",
-            ", ".join(f"`{cn}`" for cn in r["cn_list"]) if r["cn_list"] else "-",
-            ", ".join(f"`{dns}`" for dns in r["san_dns"]) if r["san_dns"] else "-",
-            ", ".join(f"`{ip}`" for ip in r["san_ips"]) if r["san_ips"] else "-",
+            f"`{_md_cell(r['issuer_cn'])}`" if r["issuer_cn"] else "-",
+            ", ".join(f"`{_md_cell(cn)}`" for cn in r["cn_list"]) if r["cn_list"] else "-",
+            ", ".join(f"`{_md_cell(dns)}`" for dns in r["san_dns"]) if r["san_dns"] else "-",
+            ", ".join(f"`{_md_cell(ip)}`" for ip in r["san_ips"]) if r["san_ips"] else "-",
         ]
         output.append("| " + " | ".join(row) + " |")
 
@@ -482,12 +493,12 @@ def format_html(results: list[dict], title: str = "DoT Audit Report") -> str:
         '  <meta charset="utf-8" />',
         '  <meta name="generator" content="DoT Auditor" />',
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />',
-        f"  <title>{title}</title>",
+        f"  <title>{_h(title)}</title>",
         '  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />',
         f"  <style>{css}</style>",
         "</head>",
         "<body>",
-        f"<h1>{title}</h1>",
+        f"<h1>{_h(title)}</h1>",
         '<p class="tooltip-hint">Hover over column headers for descriptions</p>',
         '<table id="auditTable" class="display" style="width:100%;">',
         "<thead><tr>" + "".join(f'<th title="{desc}">{name}</th>' for name, desc in headers_with_tooltips) + "</tr></thead>",
@@ -502,15 +513,15 @@ def format_html(results: list[dict], title: str = "DoT Audit Report") -> str:
 
     for r in results:
         cells = [
-            f'<td class="monospace">{r["ip"]}</td>',
-            f'<td class="monospace">{r["domain"]}</td>',
+            f'<td class="monospace">{_h(r["ip"])}</td>',
+            f'<td class="monospace">{_h(r["domain"])}</td>',
             (
-                f'<td class="monospace">{r["sni_used"]}</td>'
+                f'<td class="monospace">{_h(r["sni_used"])}</td>'
                 if r["sni_used"]
                 else "<td>-</td>"
             ),
             (
-                f'<td class="monospace">{", ".join(r["matching_ns"])}</td>'
+                f'<td class="monospace">{_h(", ".join(r["matching_ns"]))}</td>'
                 if r["matching_ns"]
                 else "<td>-</td>"
             ),
@@ -537,22 +548,22 @@ def format_html(results: list[dict], title: str = "DoT Audit Report") -> str:
                 else "<td>NO</td>" if r["is_self_signed"] is not None else "<td>-</td>"
             ),
             (
-                f'<td class="monospace">{r["issuer_cn"]}</td>'
+                f'<td class="monospace">{_h(r["issuer_cn"])}</td>'
                 if r["issuer_cn"]
                 else "<td>-</td>"
             ),
             (
-                f'<td class="monospace">{", ".join(r["cn_list"])}</td>'
+                f'<td class="monospace">{_h(", ".join(r["cn_list"]))}</td>'
                 if r["cn_list"]
                 else "<td>-</td>"
             ),
             (
-                f'<td class="monospace">{", ".join(r["san_dns"])}</td>'
+                f'<td class="monospace">{_h(", ".join(r["san_dns"]))}</td>'
                 if r["san_dns"]
                 else "<td>-</td>"
             ),
             (
-                f'<td class="monospace">{", ".join(r["san_ips"])}</td>'
+                f'<td class="monospace">{_h(", ".join(r["san_ips"]))}</td>'
                 if r["san_ips"]
                 else "<td>-</td>"
             ),
