@@ -29,39 +29,55 @@ def _h(text: object) -> str:
     return html.escape(str(text), quote=True)
 
 
-def _pill(text: str, kind: str) -> str:
-    """A colored status pill. Text is a fixed label, so it needs no escaping.
-
-    The label carries the meaning on its own, so the report stays legible
-    without color; the tint only reinforces severity.
-    """
-    return f'<span class="pill {kind}">{text}</span>'
-
-
-def _tri(value: object, yes: tuple[str, str], no: tuple[str, str]) -> str:
-    """Render a three-state boolean cell: (label, pill-kind) for True/False, dash for None."""
-    if value is None:
-        return '<td><span class="pill none">-</span></td>'
-    label, kind = yes if value else no
-    return f"<td>{_pill(label, kind)}</td>"
+# Status labels are defined once and shared by every formatter, so the Markdown
+# and HTML reports can never drift apart. Each pair maps (True, False) to a
+# (label, pill-kind); a None value renders as a dash. Labels are chosen so no
+# label in a column is a substring of another, keeping column filters unambiguous.
+_DASH = ("-", "none")
+_IP_IN_CERT = (("YES", "muted"), ("NO", "muted"))
+_EXPIRED = (("EXPIRED", "bad"), ("VALID", "ok"))
+_SELF_SIGNED = (("SELF-SIGNED", "bad"), ("CA-ISSUED", "ok"))
 
 
-def _chain_cell(r: dict) -> str:
-    """Chain-trust cell, distinguishing an untrusted chain from a check that could not run.
+def _tls_status(r: dict) -> tuple[str, str]:
+    """TLS column label and pill-kind, folding the leaf-certificate result in."""
+    if not r["tls_ok"]:
+        return ("FAIL", "bad")
+    if not r["leaf_cert_received"]:
+        return ("NO CERT", "warn")
+    return ("OK", "ok")
 
-    A null trust result with a retained error means the trust handshake failed
-    to complete (e.g. a timeout), which is not the same as the chain being
-    rejected; it renders as UNKNOWN with the error on hover.
+
+def _chain_status(r: dict) -> tuple[str, str, str | None]:
+    """Chain-trust label, pill-kind, and any retained error.
+
+    Distinguishes an untrusted chain (UNVERIFIED) from a trust check that could
+    not complete (UNKNOWN, keeping the error for a tooltip).
     """
     trusted = r.get("issued_by_trusted_ca")
     if trusted is True:
-        return f"<td>{_pill('TRUSTED', 'ok')}</td>"
+        return ("TRUSTED", "ok", None)
     if trusted is False:
-        return f"<td>{_pill('UNVERIFIED', 'bad')}</td>"
+        return ("UNVERIFIED", "bad", None)
     err = r.get("trust_error")
     if err:
-        return f'<td><span class="pill warn" title="{_h(err)}">UNKNOWN</span></td>'
-    return '<td><span class="pill none">-</span></td>'
+        return ("UNKNOWN", "warn", err)
+    return (*_DASH, None)
+
+
+def _bool_status(value: object, states: tuple) -> tuple[str, str]:
+    """Pick (label, pill-kind) for a True/False/None value; None renders as a dash."""
+    if value is None:
+        return _DASH
+    return states[0] if value else states[1]
+
+
+def _pill_td(label: str, kind: str, title: str | None = None) -> str:
+    """A table cell holding a status pill. The label is a fixed word, so only the
+    optional title (a retained error message) needs escaping.
+    """
+    attr = f' title="{_h(title)}"' if title else ""
+    return f'<td><span class="pill {kind}"{attr}>{label}</span></td>'
 
 
 def _list_cell(items: list, limit: int = 4) -> str:
@@ -128,15 +144,25 @@ def format_verbose(results: list[dict]) -> str:
     return "\n".join(output)
 
 
+def _md_list(items: list) -> str:
+    """Render a list of cert-supplied values as a Markdown cell, or a dash if empty."""
+    return ", ".join(f"`{_md_cell(x)}`" for x in items) if items else "-"
+
+
 def format_markdown(results: list[dict]) -> str:
-    """Format results as a Markdown table."""
+    """Format results as a Markdown table.
+
+    Uses the same columns and the same status words as the HTML report (no
+    emoji), so the two views read consistently. The one difference is that
+    Markdown cannot collapse long lists interactively, so the SAN columns are
+    shown in full.
+    """
     headers = [
         "IP",
         "Domain",
         "SNI Used",
         "Matching NS",
         "TLS",
-        "Leaf Cert",
         "Chain Trusted",
         "IP in Cert",
         "Expired",
@@ -157,34 +183,16 @@ def format_markdown(results: list[dict]) -> str:
             f"`{_md_cell(r['ip'])}`",
             f"`{_md_cell(r['domain'])}`",
             f"`{_md_cell(r['sni_used'])}`" if r["sni_used"] else "-",
-            (
-                ", ".join(f"`{_md_cell(ns)}`" for ns in r["matching_ns"])
-                if r["matching_ns"]
-                else "-"
-            ),
-            "✅" if r["tls_ok"] else "❌",
-            "✅" if r["leaf_cert_received"] else "❌",
-            (
-                "✅"
-                if r["issued_by_trusted_ca"]
-                else "❌" if r["issued_by_trusted_ca"] is not None
-                else "?" if r.get("trust_error") else "-"
-            ),
-            (
-                "YES"
-                if r["connected_ip_in_cert"]
-                else "NO" if r["connected_ip_in_cert"] is not None else "-"
-            ),
-            "YES" if r["is_expired"] else "NO" if r["is_expired"] is not None else "-",
-            (
-                "YES"
-                if r["is_self_signed"]
-                else "NO" if r["is_self_signed"] is not None else "-"
-            ),
+            _md_list(r["matching_ns"]),
+            _tls_status(r)[0],
+            _chain_status(r)[0],
+            _bool_status(r["connected_ip_in_cert"], _IP_IN_CERT)[0],
+            _bool_status(r["is_expired"], _EXPIRED)[0],
+            _bool_status(r["is_self_signed"], _SELF_SIGNED)[0],
             f"`{_md_cell(r['issuer_cn'])}`" if r["issuer_cn"] else "-",
-            ", ".join(f"`{_md_cell(cn)}`" for cn in r["cn_list"]) if r["cn_list"] else "-",
-            ", ".join(f"`{_md_cell(dns)}`" for dns in r["san_dns"]) if r["san_dns"] else "-",
-            ", ".join(f"`{_md_cell(ip)}`" for ip in r["san_ips"]) if r["san_ips"] else "-",
+            _md_list(r["cn_list"]),
+            _md_list(r["san_dns"]),
+            _md_list(r["san_ips"]),
         ]
         output.append("| " + " | ".join(row) + " |")
 
@@ -271,13 +279,7 @@ def format_html(
     )
 
     for r in results:
-        if not r["tls_ok"]:
-            tls_cell = f"<td>{_pill('FAIL', 'bad')}</td>"
-        elif not r["leaf_cert_received"]:
-            tls_cell = f"<td>{_pill('NO CERT', 'warn')}</td>"
-        else:
-            tls_cell = f"<td>{_pill('OK', 'ok')}</td>"
-
+        chain_label, chain_kind, chain_err = _chain_status(r)
         cells = [
             f'<td class="monospace">{_h(r["ip"])}</td>',
             f'<td class="monospace">{_h(r["domain"])}</td>',
@@ -287,14 +289,14 @@ def format_html(
                 else "<td>-</td>"
             ),
             _list_cell(r["matching_ns"]),
-            tls_cell,
+            _pill_td(*_tls_status(r)),
             # "UNVERIFIED"/"UNKNOWN" rather than "UNTRUSTED": DataTables column
             # filters match substrings, so filtering "trusted" must not also
             # catch the negatives. The labels share no substring.
-            _chain_cell(r),
-            _tri(r["connected_ip_in_cert"], ("YES", "muted"), ("NO", "muted")),
-            _tri(r["is_expired"], ("EXPIRED", "bad"), ("VALID", "ok")),
-            _tri(r["is_self_signed"], ("SELF-SIGNED", "bad"), ("CA-ISSUED", "ok")),
+            _pill_td(chain_label, chain_kind, chain_err),
+            _pill_td(*_bool_status(r["connected_ip_in_cert"], _IP_IN_CERT)),
+            _pill_td(*_bool_status(r["is_expired"], _EXPIRED)),
+            _pill_td(*_bool_status(r["is_self_signed"], _SELF_SIGNED)),
             (
                 f'<td class="monospace">{_h(r["issuer_cn"])}</td>'
                 if r["issuer_cn"]
