@@ -131,7 +131,14 @@ def extract_cns(cert_dict: dict) -> list[str]:
 
 
 def names_from_cert(cert_dict: dict) -> tuple[list[str], list[str], list[str]]:
-    """Return (cn_list, san_dns_list, san_ip_list), all de-duped."""
+    """Return (cn_list, san_dns_list, san_ip_list), all de-duped.
+
+    The SAN lists are literal: only the subjectAltName extension contributes to
+    them. CommonName is reported separately and never folded in, because modern
+    TLS identity lives in the SAN. Folding a CN into the SAN-IP list in
+    particular would let a CN=<ip> certificate with no iPAddress SAN falsely
+    satisfy the "connected IP listed in cert IP SANs" check.
+    """
     cn_list = extract_cns(cert_dict)
     dns_names, ip_addrs = [], []
 
@@ -145,13 +152,6 @@ def names_from_cert(cert_dict: dict) -> tuple[list[str], list[str], list[str]]:
             v = normalize_ip(v)
             if v not in ip_addrs:
                 ip_addrs.append(v)
-
-    for cn in cn_list:
-        is_addr = is_ip(cn)
-        name = normalize_ip(cn) if is_addr else cn
-        target = ip_addrs if is_addr else dns_names
-        if name not in target:
-            target.append(name)
 
     return cn_list, dns_names, ip_addrs
 
