@@ -54,4 +54,4 @@ GitHub Actions automatically runs on every push:
 - Tests with pytest
 - Coverage reporting to Codecov
 
-Tests run against Python 3.10, 3.11, and 3.12.
+Tests run against Python 3.10, 3.11, 3.12, 3.13, and 3.14.
