@@ -40,6 +40,19 @@ def is_ip(s: str) -> bool:
         return False
 
 
+def normalize_ip(s: str) -> str:
+    """Return the canonical text form of an IP, or the input if it does not parse.
+
+    getpeercert() renders IPv6 SAN entries uppercase and uncompressed, while
+    getpeername() and cryptography render them lowercase and compressed. The
+    two forms must be canonicalized before they can be compared as strings.
+    """
+    try:
+        return str(ipaddress.ip_address(s))
+    except ValueError:
+        return s
+
+
 def now_utc() -> datetime:
     """Return current UTC datetime."""
     return datetime.now(timezone.utc)
@@ -122,13 +135,17 @@ def names_from_cert(cert_dict: dict) -> tuple[list[str], list[str], list[str]]:
         k, v = entry[0], entry[1]
         if k == "DNS" and v not in dns_names:
             dns_names.append(v)
-        elif k in ("IP Address", "IP") and v not in ip_addrs:
-            ip_addrs.append(v)
+        elif k in ("IP Address", "IP"):
+            v = normalize_ip(v)
+            if v not in ip_addrs:
+                ip_addrs.append(v)
 
     for cn in cn_list:
-        target = ip_addrs if is_ip(cn) else dns_names
-        if cn not in target:
-            target.append(cn)
+        is_addr = is_ip(cn)
+        name = normalize_ip(cn) if is_addr else cn
+        target = ip_addrs if is_addr else dns_names
+        if name not in target:
+            target.append(name)
 
     return cn_list, dns_names, ip_addrs
 
@@ -303,7 +320,7 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     cns, san_dns, san_ips = names_from_cert(cert)
     out["cn_list"], out["san_dns"], out["san_ips"] = cns, san_dns, san_ips
     if peer_ip:
-        out["connected_ip_in_cert"] = peer_ip in set(san_ips)
+        out["connected_ip_in_cert"] = normalize_ip(peer_ip) in set(san_ips)
 
     ok2, _, _, _ = tls_handshake_to_ip(ip, port, sni_used, timeout, verify=True)
     out["issued_by_trusted_ca"] = bool(ok2)

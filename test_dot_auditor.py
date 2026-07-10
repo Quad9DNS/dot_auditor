@@ -85,6 +85,26 @@ class TestCertHelpers:
         assert "mail.example.com" in san_dns
         assert "192.168.1.1" in san_ips
 
+    def test_names_from_cert_normalizes_ipv6_san(self):
+        """SAN IPv6 entries are canonicalized, not kept as the CA wrote them.
+
+        getpeercert() renders IPv6 uppercase and uncompressed, so the raw text
+        never matches the compressed lowercase form getpeername() returns.
+        """
+        cert = {
+            "subject": (),
+            "subjectAltName": (
+                ("IP Address", "2001:19F0:6C00:8501:5400:FF:FE04:3F"),
+                ("IP Address", "2001:41D0:305:2100:0:0:0:643A"),
+                ("IP Address", "108.61.171.156"),
+            )
+        }
+        _, _, san_ips = dot_auditor.names_from_cert(cert)
+
+        assert "2001:19f0:6c00:8501:5400:ff:fe04:3f" in san_ips
+        assert "2001:41d0:305:2100::643a" in san_ips
+        assert "108.61.171.156" in san_ips
+
     def test_parse_times_valid(self):
         """Test parse_times with valid dates."""
         cert = {
@@ -284,6 +304,67 @@ class TestIntegration:
                 assert result["ip"] == "192.168.1.1"
                 assert result["domain"] == "example.com"
                 assert result["tls_ok"] is False
+
+
+class TestNormalizeIP:
+    """Test canonicalization of IP address text."""
+
+    def test_uppercase_ipv6_is_lowercased(self):
+        """getpeercert() emits uppercase hex digits."""
+        assert dot_auditor.normalize_ip("2001:19F0:6C00::3F") == "2001:19f0:6c00::3f"
+
+    def test_uncompressed_ipv6_is_compressed(self):
+        """getpeercert() emits runs of zeroes in full."""
+        assert (dot_auditor.normalize_ip("2001:41D0:305:2100:0:0:0:643A")
+                == "2001:41d0:305:2100::643a")
+
+    def test_ipv4_is_unchanged(self):
+        """IPv4 already has a single textual form."""
+        assert dot_auditor.normalize_ip("108.61.171.156") == "108.61.171.156"
+
+    def test_unparseable_is_returned_verbatim(self):
+        """Never discard text we failed to understand."""
+        assert dot_auditor.normalize_ip("not-an-ip") == "not-an-ip"
+
+
+class TestConnectedIPInCert:
+    """Test that the connected address is matched against SAN IPs by value."""
+
+    @staticmethod
+    def _connected_ip_in_cert_for(peer_ip, san_ip):
+        """Run check_row against a canned SAN and return connected_ip_in_cert."""
+        cert = {
+            "subject": (),
+            "issuer": ((("commonName", "Example CA"),),),
+            "subjectAltName": (("IP Address", san_ip),),
+        }
+        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
+            with patch('dot_auditor.tls_handshake_to_ip',
+                      return_value=(True, cert, peer_ip, None)):
+                result = dot_auditor.check_row(peer_ip, "example.com", 853, 5.0)
+                return result["connected_ip_in_cert"]
+
+    def test_ipv6_matches_despite_uppercase_uncompressed_san(self):
+        """The same address written two ways is still the same address."""
+        assert self._connected_ip_in_cert_for(
+            "2001:19f0:6c00:8501:5400:ff:fe04:3f",
+            "2001:19F0:6C00:8501:5400:FF:FE04:3F",
+        ) is True
+
+    def test_ipv6_compressed_zero_run_matches(self):
+        """getpeername() compresses zero runs that getpeercert() spells out."""
+        assert self._connected_ip_in_cert_for(
+            "2001:41d0:305:2100::643a",
+            "2001:41D0:305:2100:0:0:0:643A",
+        ) is True
+
+    def test_ipv4_matches(self):
+        """The IPv4 path, which never broke, keeps working."""
+        assert self._connected_ip_in_cert_for("108.61.171.156", "108.61.171.156") is True
+
+    def test_different_address_does_not_match(self):
+        """A genuinely absent address still reports no."""
+        assert self._connected_ip_in_cert_for("192.0.2.1", "198.51.100.1") is False
 
 
 class TestSelfSigned:
