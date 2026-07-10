@@ -186,8 +186,8 @@ The HTML output uses monospace fonts for technical data (IPs, domains, hostnames
 Interactive features powered by [DataTables](https://datatables.net/) - a powerful jQuery plugin for enhanced HTML tables.
 
 **Sample Reports**: View live examples of HTML and Markdown output:
-- [HTML Report (20260311.html)](https://quad9dns.github.io/dot_auditor/output/20260311.html)
-- [Markdown Report (20260311.md)](https://quad9dns.github.io/dot_auditor/output/20260311.md)
+- [HTML Report (20260710.html)](https://quad9dns.github.io/dot_auditor/output/20260710.html)
+- [Markdown Report (20260710.md)](https://quad9dns.github.io/dot_auditor/output/20260710.md)
 
 ## How It Works
 
