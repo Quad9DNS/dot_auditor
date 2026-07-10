@@ -15,20 +15,20 @@ pip install -r requirements.txt
 
 ```bash
 # Run all tests
-python3 -m pytest test_dot_auditor.py -v
+python3 -m pytest -v
 
 # Run with coverage
-python3 -m pytest test_dot_auditor.py --cov=dot_auditor --cov-report=term-missing
+python3 -m pytest --cov=dot_auditor --cov=dot_report --cov-report=term-missing
 ```
 
 ## Code Quality
 
 ```bash
 # Type checking
-python3 -m mypy dot_auditor.py
+python3 -m mypy dot_auditor.py dot_report.py
 
 # Linting
-python3 -m pylint dot_auditor.py
+python3 -m pylint dot_auditor.py dot_report.py
 ```
 
 ## Quality Standards

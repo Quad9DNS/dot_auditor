@@ -11,7 +11,6 @@ SPDX-License-Identifier: BSD-2-Clause
 import argparse
 import csv
 import concurrent.futures as cf
-import html
 import ipaddress
 import json
 import os
@@ -27,6 +26,12 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.x509 import SubjectAlternativeName
 
 DEFAULT_PORT = 853
+
+__version__ = "1.0.0"
+
+# Layout of the JSON audit this tool emits. Bump when a record field or the
+# envelope changes incompatibly; dot_report.py checks this before rendering.
+SCHEMA_VERSION = 1
 
 _dns_ns_cache: dict[str, list[str]] = {}
 _dns_addr_cache: dict[str, set[str]] = {}
@@ -329,294 +334,13 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     return out
 
 
-def _md_cell(text: object) -> str:
-    """Neutralize Markdown table delimiters so cert-supplied text cannot break rows."""
-    return str(text).replace("|", "\\|").replace("\r", " ").replace("\n", " ")
-
-
-def _h(text: object) -> str:
-    """HTML-escape cert-supplied text, including quotes, for safe interpolation."""
-    return html.escape(str(text), quote=True)
-
-
-def format_verbose(results: list[dict]) -> str:
-    """Format results as human-readable verbose output."""
-    output = []
-    for r in results:
-        output.append(f"=== {r['ip']} ({r['domain']}) :{r['port']} ===")
-        output.append(
-            f" Matching NS hostname(s): {', '.join(r['matching_ns']) or 'none'}"
-        )
-        output.append(f" SNI used: {r['sni_used'] or 'None'}")
-        tls_status = "OK" if r["tls_ok"] else f"FAIL ({r['error_tls']})"
-        output.append(f" TLS: {tls_status}")
-        output.append(
-            f" Leaf certificate received: {'yes' if r['leaf_cert_received'] else 'no'}"
-        )
-
-        for key, label in [
-            ("cn_list", "CN(s)"),
-            ("san_dns", "SAN DNS"),
-            ("san_ips", "SAN IPs"),
-        ]:
-            if r[key]:
-                output.append(f" {label}:")
-                output.extend(f"   - {item}" for item in r[key])
-
-        if r["not_before"] or r["not_after"]:
-            output.append(
-                f" Validity: {r['not_before'] or '-'} -> {r['not_after'] or '-'} (expired: {r['is_expired']})"
-            )
-
-        if r["issuer_cn"]:
-            output.append(f" Issued by: {r['issuer_cn']}")
-        if r["is_self_signed"] is not None:
-            output.append(f" Self-signed: {r['is_self_signed']}")
-        if r["issued_by_trusted_ca"] is not None:
-            output.append(f" Chains to system CA: {r['issued_by_trusted_ca']}")
-        if r["connected_ip_in_cert"] is not None:
-            output.append(
-                f" Connected IP listed in cert IP SANs: {r['connected_ip_in_cert']}"
-            )
-        output.append("")
-
-    return "\n".join(output)
-
-
-def format_markdown(results: list[dict]) -> str:
-    """Format results as a Markdown table."""
-    headers = [
-        "IP",
-        "Domain",
-        "SNI Used",
-        "Matching NS",
-        "TLS",
-        "Leaf Cert",
-        "Chain Trusted",
-        "IP in Cert",
-        "Expired",
-        "Self-Signed",
-        "Issued By",
-        "CN(s)",
-        "SAN DNS",
-        "SAN IPs",
-    ]
-
-    output = [
-        "| " + " | ".join(headers) + " |",
-        "|" + "|".join(["---"] * len(headers)) + "|",
-    ]
-
-    for r in results:
-        row = [
-            f"`{_md_cell(r['ip'])}`",
-            f"`{_md_cell(r['domain'])}`",
-            f"`{_md_cell(r['sni_used'])}`" if r["sni_used"] else "-",
-            (
-                ", ".join(f"`{_md_cell(ns)}`" for ns in r["matching_ns"])
-                if r["matching_ns"]
-                else "-"
-            ),
-            "✅" if r["tls_ok"] else "❌",
-            "✅" if r["leaf_cert_received"] else "❌",
-            (
-                "✅"
-                if r["issued_by_trusted_ca"]
-                else "❌" if r["issued_by_trusted_ca"] is not None else "-"
-            ),
-            (
-                "YES"
-                if r["connected_ip_in_cert"]
-                else "NO" if r["connected_ip_in_cert"] is not None else "-"
-            ),
-            "YES" if r["is_expired"] else "NO" if r["is_expired"] is not None else "-",
-            (
-                "YES"
-                if r["is_self_signed"]
-                else "NO" if r["is_self_signed"] is not None else "-"
-            ),
-            f"`{_md_cell(r['issuer_cn'])}`" if r["issuer_cn"] else "-",
-            ", ".join(f"`{_md_cell(cn)}`" for cn in r["cn_list"]) if r["cn_list"] else "-",
-            ", ".join(f"`{_md_cell(dns)}`" for dns in r["san_dns"]) if r["san_dns"] else "-",
-            ", ".join(f"`{_md_cell(ip)}`" for ip in r["san_ips"]) if r["san_ips"] else "-",
-        ]
-        output.append("| " + " | ".join(row) + " |")
-
-    return "\n".join(output)
-
-
-def format_json(results: list[dict]) -> str:
-    """Format results as JSON."""
-    return json.dumps(results, indent=2)
-
-
-def format_html(results: list[dict], title: str = "DoT Audit Report") -> str:
-    """Format results as HTML table with DataTables for sorting and filtering."""
-    timestamp = now_utc().isoformat().replace("+00:00", "")
-
-    css = """
-    body { margin: 0; padding: 10px; font-family: Arial, sans-serif; }
-    td.monospace { font-family: Consolas, monospace; background-color: #f9f9f9; }
-    table.dataTable { font-size: 14px; color: #333; }
-    table.dataTable thead th { background-color: #f5f5f5; font-weight: 600; position: relative; cursor: help; }
-    table.dataTable tbody td { vertical-align: middle; }
-    table.dataTable tfoot th { background-color: #e8e8e8; padding: 8px 12px; }
-    table.dataTable tfoot input { padding: 4px 6px; font-size: 13px; border: 1px solid #ccc; border-radius: 3px; }
-    table.dataTable tfoot input:focus { outline: none; border-color: #4a90e2; box-shadow: 0 0 3px rgba(74, 144, 226, 0.5); }
-    .tooltip-hint { font-size: 14px; color: #666; margin-top: 5px; font-style: italic; }
-    """
-
-    # Headers with tooltips (header_text, tooltip_description)
-    headers_with_tooltips = [
-        ("IP", "IP address being audited"),
-        ("Domain", "Domain name associated with the IP"),
-        ("SNI Used", "Server Name Indication used in TLS handshake"),
-        ("Matching NS", "NS hostnames that resolve to this IP"),
-        ("TLS", "TLS connection successful"),
-        ("Leaf Cert", "Leaf certificate received from server"),
-        ("Chain Trusted", "Certificate chain validates against system CA store"),
-        ("IP in Cert", "Connected IP address is listed in certificate's SAN IPs"),
-        ("Expired", "Certificate has expired"),
-        ("Self-Signed", "Certificate is self-signed"),
-        ("Issued By", "Certificate issuer (CA organization and CN)"),
-        ("CN(s)", "Common Name(s) from certificate subject"),
-        ("SAN DNS", "DNS names from Subject Alternative Name extension"),
-        ("SAN IPs", "IP addresses from Subject Alternative Name extension"),
-    ]
-
-    headers = [h[0] for h in headers_with_tooltips]
-
-    output = [
-        "<!DOCTYPE html>",
-        '<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">',
-        "<head>",
-        '  <meta charset="utf-8" />',
-        '  <meta name="generator" content="DoT Auditor" />',
-        '  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />',
-        f"  <title>{_h(title)}</title>",
-        '  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css" />',
-        f"  <style>{css}</style>",
-        "</head>",
-        "<body>",
-        f"<h1>{_h(title)}</h1>",
-        '<p class="tooltip-hint">Hover over column headers for descriptions</p>',
-        '<table id="auditTable" class="display" style="width:100%;">',
-        "<thead><tr>" + "".join(f'<th title="{desc}">{name}</th>' for name, desc in headers_with_tooltips) + "</tr></thead>",
-        "<tfoot><tr>"
-        + "".join(
-            f'<th><input type="text" placeholder="Filter {h}" style="width:100%; box-sizing:border-box;" /></th>'
-            for h in headers
-        )
-        + "</tr></tfoot>",
-        "<tbody>",
-    ]
-
-    for r in results:
-        cells = [
-            f'<td class="monospace">{_h(r["ip"])}</td>',
-            f'<td class="monospace">{_h(r["domain"])}</td>',
-            (
-                f'<td class="monospace">{_h(r["sni_used"])}</td>'
-                if r["sni_used"]
-                else "<td>-</td>"
-            ),
-            (
-                f'<td class="monospace">{_h(", ".join(r["matching_ns"]))}</td>'
-                if r["matching_ns"]
-                else "<td>-</td>"
-            ),
-            f'<td>{"✅" if r["tls_ok"] else "❌"}</td>',
-            f'<td>{"✅" if r["leaf_cert_received"] else "❌"}</td>',
-            (
-                f'<td>{"✅" if r["issued_by_trusted_ca"] else "❌"}</td>'
-                if r["issued_by_trusted_ca"] is not None
-                else "<td>-</td>"
-            ),
-            (
-                "<td>YES</td>"
-                if r["connected_ip_in_cert"]
-                else "<td>NO</td>" if r["connected_ip_in_cert"] is not None else "<td>-</td>"
-            ),
-            (
-                '<td><span style="color: red; font-weight: bold;">YES</span></td>'
-                if r["is_expired"]
-                else "<td>NO</td>" if r["is_expired"] is not None else "<td>-</td>"
-            ),
-            (
-                '<td><span style="color: red; font-weight: bold;">YES</span></td>'
-                if r["is_self_signed"]
-                else "<td>NO</td>" if r["is_self_signed"] is not None else "<td>-</td>"
-            ),
-            (
-                f'<td class="monospace">{_h(r["issuer_cn"])}</td>'
-                if r["issuer_cn"]
-                else "<td>-</td>"
-            ),
-            (
-                f'<td class="monospace">{_h(", ".join(r["cn_list"]))}</td>'
-                if r["cn_list"]
-                else "<td>-</td>"
-            ),
-            (
-                f'<td class="monospace">{_h(", ".join(r["san_dns"]))}</td>'
-                if r["san_dns"]
-                else "<td>-</td>"
-            ),
-            (
-                f'<td class="monospace">{_h(", ".join(r["san_ips"]))}</td>'
-                if r["san_ips"]
-                else "<td>-</td>"
-            ),
-        ]
-        output.append("<tr>" + "".join(cells) + "</tr>")
-
-    output.extend(
-        [
-            "</tbody>",
-            "</table>",
-            '<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>',
-            '<script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>',
-            "<script>",
-            "$(document).ready(function() {",
-            '  var table = $("#auditTable").DataTable({',
-            '    "pageLength": -1,',
-            '    "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],',
-            '    "order": [],',
-            '    "columnDefs": [{ "orderable": true, "targets": "_all" }],',
-            '    "dom": "lfrtip<\\"bottom-info\\">",',
-            '    "language": {',
-            '      "search": "Filter records:",',
-            '      "lengthMenu": "Show _MENU_ entries per page",',
-            '      "info": "Showing _START_ to _END_ of _TOTAL_ servers"',
-            "    },",
-            '    "drawCallback": function() {',
-            f'      $(".bottom-info").html(\'<div style="text-align: center; margin-top: 20px; color: #666;">Generated with <a href="https://github.com/Quad9DNS/dot_auditor">DoT Auditor</a> at {timestamp} UTC</div>\');',
-            "    },",
-            '    "initComplete": function() {',
-            "      this.api().columns().every(function() {",
-            "        var column = this;",
-            "        $('input', this.footer()).on('keyup change clear', function() {",
-            "          if (column.search() !== this.value) {",
-            "            column.search(this.value).draw();",
-            "          }",
-            "        });",
-            "      });",
-            "    }",
-            "  });",
-            "});",
-            "</script>",
-            "</body>",
-            "</html>",
-        ]
-    )
-
-    return "\n".join(output)
-
-
 def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too-many-locals
     """Main entry point for the DoT Auditor CLI."""
     ap = argparse.ArgumentParser(
-        description="Check DoT (TLS/853) servers from CSV, map IP->NS hostname, and use it as SNI."
+        description=(
+            "Check DoT (TLS/853) servers from CSV, map IP->NS hostname, use it as "
+            "SNI, and emit a JSON audit. Render it with dot_report.py."
+        )
     )
     ap.add_argument("csv_file", help="CSV with at least two columns: IP,domain.")
     ap.add_argument(
@@ -640,14 +364,10 @@ def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too
     )
     ap.add_argument("--workers", type=int, default=64, help="Concurrency (default: 64)")
     ap.add_argument(
-        "--format",
-        dest="output_format",
-        choices=["verbose", "markdown", "json", "html"],
-        default="verbose",
-        help="Output format (default: verbose)",
-    )
-    ap.add_argument(
-        "-o", "--output", dest="output_file", help="Output file path (default: stdout)"
+        "-o",
+        "--output",
+        dest="output_file",
+        help="Path to write the JSON audit (default: stdout)",
     )
     args = ap.parse_args()
 
@@ -705,13 +425,16 @@ def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too
     results.sort(key=lambda r: order.get((r["ip"], r["domain"]), 0))
 
     csv_name = os.path.splitext(os.path.basename(args.csv_file))[0]
-    formatters = {
-        "html": lambda: format_html(results, title=f"DoT Audit Report: {csv_name}"),
-        "markdown": lambda: format_markdown(results),
-        "json": lambda: format_json(results),
-        "verbose": lambda: format_verbose(results),
+    envelope = {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": now_utc().isoformat(),
+        "tool": "dot_auditor",
+        "tool_version": __version__,
+        "source": csv_name,
+        "params": {"port": args.port, "timeout": args.timeout},
+        "results": results,
     }
-    output = formatters[args.output_format]()
+    output = json.dumps(envelope, indent=2)
 
     if args.output_file:
         try:

@@ -5,7 +5,6 @@ SPDX-License-Identifier: BSD-2-Clause
 """
 
 import json
-import re
 
 import pytest
 from datetime import datetime, timezone
@@ -194,131 +193,6 @@ class TestDNSHelpers:
 
         assert "192.168.1.1" in result
         assert "2001:db8::1" in result
-
-
-class TestFormatters:
-    """Test output formatter functions."""
-
-    def test_format_verbose(self):
-        """Test verbose formatter."""
-        results = [{
-            "ip": "192.168.1.1",
-            "domain": "example.com",
-            "port": 853,
-            "matching_ns": ["ns1.example.com"],
-            "sni_used": "ns1.example.com",
-            "tls_ok": True,
-            "error_tls": None,
-            "leaf_cert_received": True,
-            "cn_list": ["example.com"],
-            "san_dns": ["www.example.com"],
-            "san_ips": ["192.168.1.100"],
-            "not_before": "2025-01-01T00:00:00+00:00",
-            "not_after": "2026-01-01T00:00:00+00:00",
-            "is_expired": False,
-            "is_self_signed": False,
-            "issued_by_trusted_ca": True,
-            "issuer_cn": "Let's Encrypt Authority X3",
-            "connected_ip_in_cert": False,
-        }]
-
-        output = dot_auditor.format_verbose(results)
-
-        assert "192.168.1.1" in output
-        assert "example.com" in output
-        assert "ns1.example.com" in output
-        assert "www.example.com" in output
-        assert "192.168.1.100" in output
-        assert "Let's Encrypt Authority X3" in output
-        assert "TLS: OK" in output
-
-    def test_format_markdown(self):
-        """Test markdown formatter with backticks for IPs and hostnames."""
-        results = [{
-            "ip": "192.168.1.1",
-            "domain": "example.com",
-            "port": 853,
-            "matching_ns": ["ns1.example.com"],
-            "sni_used": "ns1.example.com",
-            "tls_ok": True,
-            "error_tls": None,
-            "leaf_cert_received": True,
-            "cn_list": ["*.example.com"],
-            "san_dns": ["*.example.com", "example.com"],
-            "san_ips": ["192.168.1.100"],
-            "not_before": "2025-01-01T00:00:00+00:00",
-            "not_after": "2026-01-01T00:00:00+00:00",
-            "is_expired": False,
-            "is_self_signed": False,
-            "issued_by_trusted_ca": True,
-            "issuer_cn": "Let's Encrypt Authority X3",
-            "connected_ip_in_cert": False,
-        }]
-
-        output = dot_auditor.format_markdown(results)
-
-        assert "|" in output
-        assert "IP" in output
-        assert "Domain" in output
-        assert "Issued By" in output
-        assert "`192.168.1.1`" in output
-        assert "`example.com`" in output
-        assert "`ns1.example.com`" in output
-        assert "`*.example.com`" in output
-        assert "`192.168.1.100`" in output
-        assert "`Let's Encrypt Authority X3`" in output
-        assert "✅" in output  # Successful TLS
-
-    def test_format_json(self):
-        """Test JSON formatter."""
-        results = [{
-            "ip": "192.168.1.1",
-            "domain": "example.com",
-            "tls_ok": True,
-        }]
-
-        output = dot_auditor.format_json(results)
-
-        assert '"ip": "192.168.1.1"' in output
-        assert '"domain": "example.com"' in output
-        assert '"tls_ok": true' in output
-
-
-class TestOutputInjection:
-    """Certificate fields are attacker-controlled and must not break the output."""
-
-    @staticmethod
-    def _hostile_result():
-        """A result whose cert-derived fields carry HTML and Markdown metacharacters."""
-        return {
-            "ip": "192.0.2.1", "domain": "evil.example", "port": 853,
-            "matching_ns": [], "sni_used": None, "tls_ok": True, "error_tls": None,
-            "leaf_cert_received": True, "connected_ip": "192.0.2.1",
-            "not_before": "2025-01-01T00:00:00+00:00",
-            "not_after": "2030-01-01T00:00:00+00:00",
-            "is_expired": False, "is_self_signed": False,
-            "issued_by_trusted_ca": False,
-            "issuer_cn": "<script>alert(document.domain)</script>",
-            "cn_list": ['" onmouseover="alert(1)'],
-            "san_dns": ["a.evil | b.evil"], "san_ips": [],
-            "connected_ip_in_cert": False,
-        }
-
-    def test_html_escapes_script_and_attribute_payloads(self):
-        """No raw script tag or attribute breakout may reach the page."""
-        out = dot_auditor.format_html([self._hostile_result()])
-        assert "<script>alert(document.domain)</script>" not in out
-        assert '" onmouseover="alert(1)' not in out
-        assert "&lt;script&gt;" in out  # payload survives, inert
-
-    def test_markdown_pipe_does_not_add_a_column(self):
-        """A pipe in a SAN name must not shift the table's column count."""
-        out = dot_auditor.format_markdown([self._hostile_result()])
-        header, row = out.splitlines()[0], out.splitlines()[2]
-        # Only unescaped pipes act as column delimiters.
-        delimiters = lambda s: len(re.findall(r"(?<!\\)\|", s))
-        assert delimiters(row) == delimiters(header)
-        assert "\\|" in row  # the SAN pipe was escaped, not dropped
 
 
 class TestIntegration:
@@ -565,10 +439,30 @@ class TestInputValidation:
             return {"ip": ip, "domain": domain}
 
         with patch('dot_auditor.check_row', side_effect=fake_check_row):
-            with patch('sys.argv',
-                       ['dot_auditor.py', str(csv_file), '--format', 'json']):
+            with patch('sys.argv', ['dot_auditor.py', str(csv_file)]):
                 dot_auditor.main()
 
-        audited = json.loads(capsys.readouterr().out)
-        domains = {r["domain"] for r in audited}
+        envelope = json.loads(capsys.readouterr().out)
+        domains = {r["domain"] for r in envelope["results"]}
         assert domains == {".", "example.com"}  # trailing dot stripped, root kept
+
+    def test_output_is_a_self_describing_envelope(self, tmp_path, capsys):
+        """The collector emits an envelope with provenance, not a bare array."""
+        csv_file = tmp_path / "one.csv"
+        csv_file.write_text("1.1.1.1,example.com\n")
+
+        with patch('dot_auditor.check_row',
+                   side_effect=lambda ip, domain, port, timeout: {
+                       "ip": ip, "domain": domain}):
+            with patch('sys.argv',
+                       ['dot_auditor.py', str(csv_file), '--port', '853']):
+                dot_auditor.main()
+
+        env = json.loads(capsys.readouterr().out)
+        assert env["schema_version"] == dot_auditor.SCHEMA_VERSION
+        assert env["tool"] == "dot_auditor"
+        assert env["tool_version"] == dot_auditor.__version__
+        assert env["source"] == "one"
+        assert env["params"]["port"] == 853
+        assert isinstance(env["generated_at"], str)
+        assert len(env["results"]) == 1
