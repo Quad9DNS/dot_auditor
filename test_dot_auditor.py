@@ -286,6 +286,52 @@ class TestIntegration:
                 assert result["tls_ok"] is False
 
 
+class TestSelfSigned:
+    """Test is_self_signed, which compares the subject and issuer DNs."""
+
+    @staticmethod
+    def _self_signed_for(cert):
+        """Run check_row against a canned certificate and return is_self_signed."""
+        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
+            with patch('dot_auditor.tls_handshake_to_ip',
+                      return_value=(True, cert, "192.0.2.1", None)):
+                result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
+                return result["is_self_signed"]
+
+    def test_matching_dns_is_self_signed(self):
+        """Identical subject and issuer means the cert issued itself."""
+        name = ((("commonName", "dns.example.com"),),)
+        assert self._self_signed_for({"subject": name, "issuer": name}) is True
+
+    def test_differing_dns_is_not_self_signed(self):
+        """A leaf issued by a CA, private or public, is not self-signed."""
+        cert = {
+            "subject": ((("commonName", "Localhost"),),),
+            "issuer": ((("commonName", "Northland Root CA"),),),
+        }
+        assert self._self_signed_for(cert) is False
+
+    def test_empty_subject_is_not_self_signed(self):
+        """An empty subject DN cannot equal a non-empty issuer, so the answer is no.
+
+        Certificates that carry their names only in the SAN, such as some
+        Let's Encrypt profiles, have an empty subject DN.
+        """
+        cert = {
+            "subject": (),
+            "issuer": ((("organizationName", "Let's Encrypt"),), (("commonName", "YE1"),)),
+        }
+        assert self._self_signed_for(cert) is False
+
+    def test_both_dns_empty_is_unknown(self):
+        """With neither DN present there is nothing to compare."""
+        assert self._self_signed_for({"subject": (), "issuer": ()}) is None
+
+    def test_absent_dns_is_unknown(self):
+        """A cert dict lacking the fields entirely tells us nothing."""
+        assert self._self_signed_for({"notAfter": "Jan 1 00:00:00 2030 GMT"}) is None
+
+
 class TestInputValidation:
     """Test input validation and error handling."""
 

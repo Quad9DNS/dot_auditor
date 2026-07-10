@@ -292,7 +292,12 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     out["is_expired"] = na is not None and now_utc() > na
 
     subj, issuer = cert.get("subject"), cert.get("issuer")
-    out["is_self_signed"] = (subj == issuer) if (subj and issuer) else None
+    # An empty subject DN is a definitive answer, not a missing one: it cannot
+    # equal a non-empty issuer. Only a wholly absent DN is genuinely unknown.
+    if subj is None or issuer is None or not (subj or issuer):
+        out["is_self_signed"] = None
+    else:
+        out["is_self_signed"] = subj == issuer
     out["issuer_cn"] = extract_issuer_cn(cert)
 
     cns, san_dns, san_ips = names_from_cert(cert)
