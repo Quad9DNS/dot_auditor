@@ -217,7 +217,8 @@ class TestIntegration:
         """Test that check_row returns properly structured dict."""
         with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
             with patch('dot_auditor.tls_handshake_to_ip',
-                      return_value=(False, None, None, "timeout")):
+                      return_value=(False, None, None, "timeout",
+                                    dot_auditor.ERR_TRANSPORT)):
                 result = dot_auditor.check_row("192.168.1.1", "example.com", 853, 5.0)
 
                 # Verify all expected keys are present
@@ -226,7 +227,8 @@ class TestIntegration:
                     "tls_ok", "error_tls", "leaf_cert_received",
                     "connected_ip", "not_before", "not_after",
                     "is_expired", "is_self_signed", "issued_by_trusted_ca",
-                    "issuer_cn", "cn_list", "san_dns", "san_ips", "connected_ip_in_cert"
+                    "trust_error", "issuer_cn", "cn_list", "san_dns", "san_ips",
+                    "connected_ip_in_cert"
                 }
 
                 assert set(result.keys()) == expected_keys
@@ -269,7 +271,7 @@ class TestConnectedIPInCert:
         }
         with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
             with patch('dot_auditor.tls_handshake_to_ip',
-                      return_value=(True, cert, peer_ip, None)):
+                      return_value=(True, cert, peer_ip, None, None)):
                 result = dot_auditor.check_row(peer_ip, "example.com", 853, 5.0)
                 return result["connected_ip_in_cert"]
 
@@ -304,9 +306,71 @@ class TestConnectedIPInCert:
         }
         with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
             with patch('dot_auditor.tls_handshake_to_ip',
-                      return_value=(True, cert, "192.0.2.1", None)):
+                      return_value=(True, cert, "192.0.2.1", None, None)):
                 result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
         assert result["connected_ip_in_cert"] is False
+
+
+class TestVerifyTrust:
+    """Trust verification must separate an untrusted chain from a check that could not run."""
+
+    def test_trusted_chain(self):
+        """A validating chain returns (True, None)."""
+        with patch('dot_auditor.tls_handshake_to_ip',
+                   return_value=(True, {}, "192.0.2.1", None, None)) as m:
+            assert dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
+            assert m.call_count == 1
+
+    def test_verification_failure_is_untrusted_and_not_retried(self):
+        """A certificate rejection is deterministic: report False, do not retry."""
+        err = "SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] unable to get issuer"
+        with patch('dot_auditor.tls_handshake_to_ip',
+                   return_value=(False, None, None, err,
+                                 dot_auditor.ERR_VERIFY)) as m:
+            trusted, msg = dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0)
+            assert trusted is False
+            assert msg == err
+            assert m.call_count == 1  # not retried
+
+    def test_transport_failure_is_unknown_after_retry(self):
+        """A timeout on the trust handshake yields unknown (None), retried once first."""
+        err = "TimeoutError: timed out"
+        with patch('dot_auditor.tls_handshake_to_ip',
+                   return_value=(False, None, None, err,
+                                 dot_auditor.ERR_TRANSPORT)) as m:
+            trusted, msg = dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0)
+            assert trusted is None
+            assert msg == err
+            assert m.call_count == 2  # initial attempt + one retry
+
+    def test_retry_recovers_from_a_transient_failure(self):
+        """If the retry succeeds, the chain is trusted."""
+        with patch('dot_auditor.tls_handshake_to_ip', side_effect=[
+            (False, None, None, "TimeoutError: timed out", dot_auditor.ERR_TRANSPORT),
+            (True, {}, "192.0.2.1", None, None),
+        ]) as m:
+            assert dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
+            assert m.call_count == 2
+
+    def test_check_row_reports_unknown_trust_on_transport_error(self):
+        """A cert received, then a trust-check timeout, must not read as untrusted."""
+        cert = {
+            "subject": ((("commonName", "h.example"),),),
+            "issuer": ((("commonName", "Example CA"),),),
+            "subjectAltName": (("DNS", "h.example"),),
+        }
+        transport_fail = (False, None, None, "TimeoutError: timed out",
+                          dot_auditor.ERR_TRANSPORT)
+        # First call (verify=False) returns the cert; trust-check calls time out.
+        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
+            with patch('dot_auditor.tls_handshake_to_ip', side_effect=[
+                (True, cert, "192.0.2.1", None, None),
+                transport_fail,
+                transport_fail,
+            ]):
+                result = dot_auditor.check_row("192.0.2.1", "h.example", 853, 5.0)
+        assert result["issued_by_trusted_ca"] is None  # unknown, not False
+        assert "TimeoutError" in result["trust_error"]
 
 
 class TestSelfSigned:
@@ -317,7 +381,7 @@ class TestSelfSigned:
         """Run check_row against a canned certificate and return is_self_signed."""
         with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
             with patch('dot_auditor.tls_handshake_to_ip',
-                      return_value=(True, cert, "192.0.2.1", None)):
+                      return_value=(True, cert, "192.0.2.1", None, None)):
                 result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
                 return result["is_self_signed"]
 

@@ -16,7 +16,7 @@ import sys
 
 # The envelope layout this renderer understands. Bump in lockstep with the
 # collector when the shape of a record or the envelope changes incompatibly.
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 
 
 def _md_cell(text: object) -> str:
@@ -44,6 +44,24 @@ def _tri(value: object, yes: tuple[str, str], no: tuple[str, str]) -> str:
         return '<td><span class="pill none">-</span></td>'
     label, kind = yes if value else no
     return f"<td>{_pill(label, kind)}</td>"
+
+
+def _chain_cell(r: dict) -> str:
+    """Chain-trust cell, distinguishing an untrusted chain from a check that could not run.
+
+    A null trust result with a retained error means the trust handshake failed
+    to complete (e.g. a timeout), which is not the same as the chain being
+    rejected; it renders as UNKNOWN with the error on hover.
+    """
+    trusted = r.get("issued_by_trusted_ca")
+    if trusted is True:
+        return f"<td>{_pill('TRUSTED', 'ok')}</td>"
+    if trusted is False:
+        return f"<td>{_pill('UNVERIFIED', 'bad')}</td>"
+    err = r.get("trust_error")
+    if err:
+        return f'<td><span class="pill warn" title="{_h(err)}">UNKNOWN</span></td>'
+    return '<td><span class="pill none">-</span></td>'
 
 
 def _list_cell(items: list, limit: int = 4) -> str:
@@ -99,6 +117,8 @@ def format_verbose(results: list[dict]) -> str:
             output.append(f" Self-signed: {r['is_self_signed']}")
         if r["issued_by_trusted_ca"] is not None:
             output.append(f" Chains to system CA: {r['issued_by_trusted_ca']}")
+        elif r.get("trust_error"):
+            output.append(f" Chains to system CA: unknown ({r['trust_error']})")
         if r["connected_ip_in_cert"] is not None:
             output.append(
                 f" Connected IP listed in cert IP SANs: {r['connected_ip_in_cert']}"
@@ -147,7 +167,8 @@ def format_markdown(results: list[dict]) -> str:
             (
                 "✅"
                 if r["issued_by_trusted_ca"]
-                else "❌" if r["issued_by_trusted_ca"] is not None else "-"
+                else "❌" if r["issued_by_trusted_ca"] is not None
+                else "?" if r.get("trust_error") else "-"
             ),
             (
                 "YES"
@@ -267,10 +288,10 @@ def format_html(
             ),
             _list_cell(r["matching_ns"]),
             tls_cell,
-            # "UNVERIFIED" rather than "UNTRUSTED": DataTables column filters
-            # match substrings, so filtering "trusted" must not also catch the
-            # negatives. The two labels share no substring.
-            _tri(r["issued_by_trusted_ca"], ("TRUSTED", "ok"), ("UNVERIFIED", "bad")),
+            # "UNVERIFIED"/"UNKNOWN" rather than "UNTRUSTED": DataTables column
+            # filters match substrings, so filtering "trusted" must not also
+            # catch the negatives. The labels share no substring.
+            _chain_cell(r),
             _tri(r["connected_ip_in_cert"], ("YES", "muted"), ("NO", "muted")),
             _tri(r["is_expired"], ("EXPIRED", "bad"), ("VALID", "ok")),
             _tri(r["is_self_signed"], ("SELF-SIGNED", "bad"), ("CA-ISSUED", "ok")),

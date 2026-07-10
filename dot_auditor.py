@@ -31,7 +31,9 @@ __version__ = "1.0.0"
 
 # Layout of the JSON audit this tool emits. Bump when a record field or the
 # envelope changes incompatibly; dot_report.py checks this before rendering.
-SCHEMA_VERSION = 1
+# v2 added the tri-state issued_by_trusted_ca (null = trust check unavailable)
+# and the trust_error field.
+SCHEMA_VERSION = 2
 
 _dns_ns_cache: dict[str, list[str]] = {}
 _dns_addr_cache: dict[str, set[str]] = {}
@@ -223,10 +225,22 @@ def der_cert_to_dict(der_bytes: bytes) -> dict:
         return {}
 
 
+# Failure categories reported by tls_handshake_to_ip, so callers can tell a
+# deterministic certificate rejection from a possibly-transient transport error
+# without parsing the message string.
+ERR_VERIFY = "verify"
+ERR_TRANSPORT = "transport"
+
+
 def tls_handshake_to_ip(
     ip: str, port: int, sni: str | None, timeout: float = 5.0, verify: bool = False
-) -> tuple[bool, dict | None, str | None, str | None]:
-    """Connect to IP:port with TLS. Returns (ok, cert_dict, peer_ip, error_msg)."""
+) -> tuple[bool, dict | None, str | None, str | None, str | None]:
+    """Connect to IP:port with TLS.
+
+    Returns (ok, cert_dict, peer_ip, error_msg, error_kind). error_kind is
+    ERR_VERIFY for a certificate validation failure, ERR_TRANSPORT for a
+    connection/TLS/timeout failure, or None on success.
+    """
     ctx = ssl.create_default_context(ssl.Purpose.SERVER_AUTH)
     ctx.check_hostname = False
     ctx.verify_mode = ssl.CERT_REQUIRED if verify else ssl.CERT_OPTIONAL
@@ -234,9 +248,10 @@ def tls_handshake_to_ip(
     try:
         infos = socket.getaddrinfo(ip, port, 0, socket.SOCK_STREAM)
     except socket.gaierror as e:
-        return False, None, None, f"getaddrinfo failed: {e}"
+        return False, None, None, f"getaddrinfo failed: {e}", ERR_TRANSPORT
 
     last_err: Exception | None = None
+    last_kind: str | None = None
     for family, socktype, proto, _, sockaddr in infos:
         try:
             with socket.socket(family, socktype, proto) as raw:
@@ -244,7 +259,7 @@ def tls_handshake_to_ip(
                 raw.connect(sockaddr)
                 sni_host = sni if (sni and not is_ip(sni)) else None
                 with ctx.wrap_socket(raw, server_hostname=sni_host) as tls:
-                    return True, tls.getpeercert(), tls.getpeername()[0], None
+                    return True, tls.getpeercert(), tls.getpeername()[0], None, None
         except ssl.SSLCertVerificationError as e:
             if not verify:
                 try:
@@ -261,17 +276,45 @@ def tls_handshake_to_ip(
                             der_cert = tls.getpeercert(binary_form=True)
                             peer_ip = tls.getpeername()[0]
                             if der_cert and (cert_dict := der_cert_to_dict(der_cert)):
-                                return True, cert_dict, peer_ip, None
+                                return True, cert_dict, peer_ip, None, None
                 except Exception:
                     pass
-            last_err = e
+            last_err, last_kind = e, ERR_VERIFY
         except (OSError, ssl.SSLError, TimeoutError) as e:
-            last_err = e
+            last_err, last_kind = e, ERR_TRANSPORT
 
     error_msg = (
         f"{type(last_err).__name__}: {last_err}" if last_err else "connection failed"
     )
-    return False, None, None, error_msg
+    return False, None, None, error_msg, (last_kind or ERR_TRANSPORT)
+
+
+def verify_trust(
+    ip: str, port: int, sni: str | None, timeout: float, retries: int = 1
+) -> tuple[bool | None, str | None]:
+    """Determine whether the chain validates against the system CA store.
+
+    Returns (trusted, error):
+      True,  None  -> the chain validated
+      False, msg   -> the certificate was received but failed verification
+      None,  msg   -> the check could not run (transport failure), so trust is
+                      genuinely unknown rather than untrusted
+
+    A verification failure is deterministic and never retried. A transport
+    failure may be transient, so it is retried before giving up, to avoid
+    reporting a trusted server as untrusted after one flaky connection.
+    """
+    last_err: str | None = None
+    for _ in range(retries + 1):
+        ok, _cert, _peer, err, kind = tls_handshake_to_ip(
+            ip, port, sni, timeout, verify=True
+        )
+        if ok:
+            return True, None
+        if kind == ERR_VERIFY:  # deterministic rejection: the chain is untrusted
+            return False, err
+        last_err = err  # transport failure: may be transient, so retry
+    return None, last_err
 
 
 def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
@@ -280,7 +323,7 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     sni_used = (
         matching_ns[0] if matching_ns else (domain if not is_ip(domain) else None)
     )
-    ok1, cert, peer_ip, err1 = tls_handshake_to_ip(
+    ok1, cert, peer_ip, err1, _ = tls_handshake_to_ip(
         ip, port, sni_used, timeout, verify=False
     )
 
@@ -299,6 +342,7 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
         "is_expired": None,
         "is_self_signed": None,
         "issued_by_trusted_ca": None,
+        "trust_error": None,
         "issuer_cn": None,
         "cn_list": [],
         "san_dns": [],
@@ -328,8 +372,9 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
     if peer_ip:
         out["connected_ip_in_cert"] = normalize_ip(peer_ip) in set(san_ips)
 
-    ok2, _, _, _ = tls_handshake_to_ip(ip, port, sni_used, timeout, verify=True)
-    out["issued_by_trusted_ca"] = bool(ok2)
+    trusted, trust_err = verify_trust(ip, port, sni_used, timeout)
+    out["issued_by_trusted_ca"] = trusted
+    out["trust_error"] = trust_err
 
     return out
 
