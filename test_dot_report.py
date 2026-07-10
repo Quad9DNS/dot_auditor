@@ -123,6 +123,19 @@ class TestHtmlDensity:
         # A severity word carries meaning without relying on color.
         assert "TRUSTED" in out
 
+    def test_chain_status_words_are_filter_disjoint(self):
+        """Per-column filters match substrings, so no negative label may contain a positive one.
+
+        Filtering the Chain column for the positive word must not also match
+        the negative rows, which "TRUSTED"/"UNTRUSTED" would break.
+        """
+        pos = re.findall(r'pill \w+">([^<]+)<',
+                         dot_report.format_html([_result(issued_by_trusted_ca=True)]))
+        neg = re.findall(r'pill \w+">([^<]+)<',
+                         dot_report.format_html([_result(issued_by_trusted_ca=False)]))
+        assert "TRUSTED" in pos
+        assert not any("TRUSTED" in label for label in neg)
+
     def test_long_san_list_is_collapsed(self):
         """A large SAN DNS set is truncated with an expand toggle, keeping all names."""
         names = [f"ns{i}.example.com" for i in range(12)]

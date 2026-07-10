@@ -267,7 +267,10 @@ def format_html(
             ),
             _list_cell(r["matching_ns"]),
             tls_cell,
-            _tri(r["issued_by_trusted_ca"], ("TRUSTED", "ok"), ("UNTRUSTED", "bad")),
+            # "UNVERIFIED" rather than "UNTRUSTED": DataTables column filters
+            # match substrings, so filtering "trusted" must not also catch the
+            # negatives. The two labels share no substring.
+            _tri(r["issued_by_trusted_ca"], ("TRUSTED", "ok"), ("UNVERIFIED", "bad")),
             _tri(r["connected_ip_in_cert"], ("YES", "muted"), ("NO", "muted")),
             _tri(r["is_expired"], ("EXPIRED", "bad"), ("VALID", "ok")),
             _tri(r["is_self_signed"], ("SELF-SIGNED", "bad"), ("CA-ISSUED", "ok")),
