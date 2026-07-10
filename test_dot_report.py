@@ -86,7 +86,24 @@ class TestFormatters:
         assert "`*.example.com`" in output
         assert "`192.168.1.100`" in output
         assert "`Let's Encrypt Authority X3`" in output
-        assert "✅" in output  # Successful TLS
+        assert "OK" in output  # TLS status as a word, not an emoji
+
+    def test_markdown_matches_the_html_model(self):
+        """Markdown uses the same columns and status words as HTML, and no emoji."""
+        out = dot_report.format_markdown([_result(
+            issued_by_trusted_ca=None, trust_error="TimeoutError: timed out",
+            is_expired=False, is_self_signed=False, connected_ip_in_cert=True,
+            leaf_cert_received=False)])
+        header, row = out.splitlines()[0], out.splitlines()[2]
+        # Leaf Cert column is folded into TLS, matching HTML: 13 columns.
+        assert "Leaf Cert" not in header
+        assert header.count("|") == 14  # 13 columns => 14 pipes
+        # No emoji anywhere; status is the same vocabulary as the HTML pills.
+        assert "✅" not in out and "❌" not in out
+        assert "NO CERT" in row      # tls_ok but no leaf cert
+        assert "UNKNOWN" in row      # trust check could not run
+        assert "VALID" in row        # not expired
+        assert "CA-ISSUED" in row    # not self-signed
 
     def test_format_html_includes_provenance(self):
         """The HTML report surfaces where the data came from."""
