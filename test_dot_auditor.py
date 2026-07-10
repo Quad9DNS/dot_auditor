@@ -4,6 +4,8 @@ Unit tests for DoT Auditor.
 SPDX-License-Identifier: BSD-2-Clause
 """
 
+import json
+
 import pytest
 from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
@@ -511,3 +513,24 @@ class TestInputValidation:
         assert exc.value.code == 1 or "No valid IP/domain pairs found" in str(exc.value.code)
         captured = capsys.readouterr()
         assert "Invalid IP address" in captured.err
+
+    def test_root_domain_is_not_dropped(self, tmp_path, capsys):
+        """The DNS root '.' must survive parsing, not collapse to an empty field.
+
+        Stripping the trailing dot of a FQDN must not delete the root zone
+        itself, or root-server rows are silently discarded.
+        """
+        csv_file = tmp_path / "root.csv"
+        csv_file.write_text("170.247.170.2,.\n1.1.1.1,example.com.\n")
+
+        def fake_check_row(ip, domain, port, timeout):
+            return {"ip": ip, "domain": domain}
+
+        with patch('dot_auditor.check_row', side_effect=fake_check_row):
+            with patch('sys.argv',
+                       ['dot_auditor.py', str(csv_file), '--format', 'json']):
+                dot_auditor.main()
+
+        audited = json.loads(capsys.readouterr().out)
+        domains = {r["domain"] for r in audited}
+        assert domains == {".", "example.com"}  # trailing dot stripped, root kept

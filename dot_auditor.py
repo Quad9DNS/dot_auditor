@@ -658,9 +658,12 @@ def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too
                     continue
                 if i == 0 and args.has_header:
                     continue
-                ip_txt, dom = row[args.ip_col].strip(), row[
-                    args.domain_col
-                ].strip().rstrip(".")
+                ip_txt = row[args.ip_col].strip()
+                dom = row[args.domain_col].strip()
+                # Strip the trailing dot of a FQDN, but keep the root zone "."
+                # itself: rstrip would collapse it to empty and drop root servers.
+                if dom != ".":
+                    dom = dom.rstrip(".")
                 if not ip_txt or not dom:
                     continue
                 try:
