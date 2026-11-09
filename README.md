@@ -3,7 +3,7 @@
 [![CI](https://github.com/Quad9DNS/dot_auditor/actions/workflows/ci.yml/badge.svg)](https://github.com/Quad9DNS/dot_auditor/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/Quad9DNS/dot_auditor/branch/main/graph/badge.svg)](https://codecov.io/gh/Quad9DNS/dot_auditor)
 [![License](https://img.shields.io/badge/License-BSD_2--Clause-blue.svg)](LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
 A tool for auditing TLS certificates on DNS-over-TLS servers.
 
@@ -27,7 +27,7 @@ The work is split across two programs. `dot_auditor.py` collects the data and wr
 
 ## Installation
 
-Requires Python 3.10 or later.
+Requires Python 3.11 or later.
 
 ```bash
 pip install dnspython cryptography
