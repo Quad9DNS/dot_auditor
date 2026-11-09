@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-DoT Auditor report renderer.
+ADoT Census report renderer.
 
-Reads a JSON audit produced by dot_auditor.py and renders it as verbose text,
+Reads a JSON audit produced by adot_census.py and renders it as verbose text,
 a Markdown table, or an interactive HTML page. Presentation only: this program
 performs no network or certificate work and depends on the standard library.
 
@@ -252,7 +252,7 @@ def format_html(
         '<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">',
         "<head>",
         '  <meta charset="utf-8" />',
-        '  <meta name="generator" content="DoT Auditor" />',
+        '  <meta name="generator" content="ADoT Census" />',
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />',
         f"  <title>{_h(title)}</title>",
         '  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" />',
@@ -309,10 +309,10 @@ def format_html(
         output.append("<tr>" + "".join(cells) + "</tr>")
 
     footer = (
-        f'Generated with <a href="https://github.com/Quad9DNS/dot_auditor">DoT Auditor</a>'
+        f'Generated with <a href="https://github.com/Quad9DNS/adot-census">ADoT Census</a>'
         f". {_h(provenance)}"
         if provenance
-        else 'Generated with <a href="https://github.com/Quad9DNS/dot_auditor">DoT Auditor</a>'
+        else 'Generated with <a href="https://github.com/Quad9DNS/adot-census">ADoT Census</a>'
     )
     output.extend(
         [
@@ -374,9 +374,9 @@ def load_envelope(path: str) -> dict:
 
     if not isinstance(envelope, dict) or "results" not in envelope:
         sys.exit(
-            "Error: input is not a DoT Auditor envelope "
+            "Error: input is not an ADoT Census envelope "
             "(expected an object with a 'results' key). "
-            "Produce one with: dot_auditor.py <csv> -o audit.json"
+            "Produce one with: adot_census.py <csv> -o audit.json"
         )
 
     version = envelope.get("schema_version")
@@ -384,7 +384,7 @@ def load_envelope(path: str) -> dict:
         sys.exit(
             f"Error: unsupported schema_version {version!r}; "
             f"this renderer understands version {SCHEMA_VERSION}. "
-            "Use a matching dot_auditor/dot_report pair."
+            "Use a matching adot_census/adot_report pair."
         )
 
     return envelope
@@ -402,9 +402,9 @@ def provenance_line(envelope: dict) -> str:
 
 
 def main() -> None:
-    """Render a DoT Auditor JSON audit into a report."""
+    """Render an ADoT Census JSON audit into a report."""
     ap = argparse.ArgumentParser(
-        description="Render a DoT Auditor JSON audit as verbose text, Markdown, or HTML."
+        description="Render an ADoT Census JSON audit as verbose text, Markdown, or HTML."
     )
     ap.add_argument(
         "input",

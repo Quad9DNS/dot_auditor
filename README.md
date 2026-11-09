@@ -1,17 +1,17 @@
-# DoT Auditor
+# ADoT Census
 
-[![CI](https://github.com/Quad9DNS/dot_auditor/actions/workflows/ci.yml/badge.svg)](https://github.com/Quad9DNS/dot_auditor/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/Quad9DNS/dot_auditor/branch/main/graph/badge.svg)](https://codecov.io/gh/Quad9DNS/dot_auditor)
+[![CI](https://github.com/Quad9DNS/adot-census/actions/workflows/ci.yml/badge.svg)](https://github.com/Quad9DNS/adot-census/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/Quad9DNS/adot-census/branch/main/graph/badge.svg)](https://codecov.io/gh/Quad9DNS/adot-census)
 [![License](https://img.shields.io/badge/License-BSD_2--Clause-blue.svg)](LICENSE)
 [![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 
-A tool for auditing TLS certificates on DNS-over-TLS servers.
+A census of DNS-over-TLS on authoritative DNS servers (ADoT), with an audit of each server's TLS certificate.
 
 ## Overview
 
-Analyzes TLS certificates on DoT servers (port 853). Resolves NS records for each domain, uses them as SNI during TLS handshake, and extracts certificate information.
+Analyzes TLS certificates on authoritative DNS servers that offer DoT (port 853). Resolves NS records for each domain, uses them as SNI during TLS handshake, and extracts certificate information.
 
-The work is split across two programs. `dot_auditor.py` collects the data and writes a JSON audit; `dot_report.py` turns that JSON into a human-readable report. Collection and presentation are decoupled, so a single audit can be re-rendered in any format, kept as a machine-readable record, or diffed over time without re-probing the servers. The renderer depends only on the Python standard library.
+The work is split across two programs. `adot_census.py` collects the data and writes a JSON audit; `adot_report.py` turns that JSON into a human-readable report. Collection and presentation are decoupled, so a single audit can be re-rendered in any format, kept as a machine-readable record, or diffed over time without re-probing the servers. The renderer depends only on the Python standard library.
 
 ## Features
 
@@ -40,14 +40,14 @@ pip install dnspython cryptography
 Collect an audit into JSON, then render it:
 
 ```bash
-python3 dot_auditor.py input.csv -o audit.json
-python3 dot_report.py audit.json --format html -o report.html
+python3 adot_census.py input.csv -o audit.json
+python3 adot_report.py audit.json --format html -o report.html
 ```
 
 The two programs also pipe together when you do not need to keep the JSON:
 
 ```bash
-python3 dot_auditor.py input.csv | python3 dot_report.py --format markdown
+python3 adot_census.py input.csv | python3 adot_report.py --format markdown
 ```
 
 ### Input Format
@@ -61,7 +61,7 @@ Example `input.csv`:
 2604:a880:1:20::132:5001,powerdns.com
 ```
 
-### Collector Options (`dot_auditor.py`)
+### Collector Options (`adot_census.py`)
 
 | Option | Description |
 |--------|-------------|
@@ -75,7 +75,7 @@ Example `input.csv`:
 | `--workers` | Number of concurrent checks (default: `64`) |
 | `-o`, `--output` | Path to write the JSON audit (default: stdout) |
 
-### Renderer Options (`dot_report.py`)
+### Renderer Options (`adot_report.py`)
 
 | Option | Description |
 |--------|-------------|
@@ -91,8 +91,8 @@ The collector emits a self-describing envelope: provenance about the run followe
 {
   "schema_version": 2,
   "generated_at": "2026-07-10T12:00:00+00:00",
-  "tool": "dot_auditor",
-  "tool_version": "1.0.0",
+  "tool": "adot_census",
+  "tool_version": "2.0.0",
   "source": "input",
   "params": { "port": 853, "timeout": 5.0 },
   "results": [
@@ -126,14 +126,14 @@ The collector emits a self-describing envelope: provenance about the run followe
 
 ### Report Formats
 
-Pass one of these to `dot_report.py --format`.
+Pass one of these to `adot_report.py --format`.
 
 #### Verbose
 
 Detailed human-readable output with all certificate information:
 
 ```bash
-python3 dot_report.py audit.json --format verbose
+python3 adot_report.py audit.json --format verbose
 ```
 
 ```
@@ -159,7 +159,7 @@ python3 dot_report.py audit.json --format verbose
 Formatted as a table for documentation and reports:
 
 ```bash
-python3 dot_report.py audit.json --format markdown
+python3 adot_report.py audit.json --format markdown
 ```
 
 | IP | Domain | SNI Used | Matching NS | TLS | Chain Trusted | IP in Cert | Expired | Self-Signed | Issued By | CN(s) | SAN DNS | SAN IPs |
@@ -171,7 +171,7 @@ python3 dot_report.py audit.json --format markdown
 Interactive HTML reports with DataTables integration for advanced filtering and sorting:
 
 ```bash
-python3 dot_report.py audit.json --format html -o report.html
+python3 adot_report.py audit.json --format html -o report.html
 ```
 
 Features:
@@ -190,8 +190,8 @@ The HTML output uses monospace fonts for technical data (IPs, domains, hostnames
 Interactive features powered by [DataTables](https://datatables.net/) - a powerful jQuery plugin for enhanced HTML tables.
 
 **Sample Reports**: View live examples of HTML and Markdown output:
-- [HTML Report (20261109.html)](https://quad9dns.github.io/dot_auditor/output/20261109.html)
-- [Markdown Report (20261109.md)](https://quad9dns.github.io/dot_auditor/output/20261109.md)
+- [HTML Report (20261109.html)](https://quad9dns.github.io/adot-census/output/20261109.html)
+- [Markdown Report (20261109.md)](https://quad9dns.github.io/adot-census/output/20261109.md)
 
 ## How It Works
 
@@ -213,20 +213,20 @@ Interactive features powered by [DataTables](https://datatables.net/) - a powerf
 ### Audit a list of public DNS servers and produce a Markdown report
 
 ```bash
-python3 dot_auditor.py public-dns-servers.csv -o audit.json
-python3 dot_report.py audit.json --format markdown -o audit-report.md
+python3 adot_census.py public-dns-servers.csv -o audit.json
+python3 adot_report.py audit.json --format markdown -o audit-report.md
 ```
 
 ### Check with custom timeout and port
 
 ```bash
-python3 dot_auditor.py servers.csv --port=8853 --timeout=10.0 --workers=32 -o audit.json
+python3 adot_census.py servers.csv --port=8853 --timeout=10.0 --workers=32 -o audit.json
 ```
 
 ### Keep the JSON audit for further processing
 
 ```bash
-python3 dot_auditor.py servers.csv -o results.json
+python3 adot_census.py servers.csv -o results.json
 ```
 
 The `results.json` file is the audit of record; render it whenever needed without re-probing the servers.

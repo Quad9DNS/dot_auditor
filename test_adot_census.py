@@ -1,5 +1,5 @@
 """
-Unit tests for DoT Auditor.
+Unit tests for the ADoT Census collector.
 
 SPDX-License-Identifier: BSD-2-Clause
 """
@@ -12,7 +12,7 @@ import ssl
 import pytest
 from datetime import datetime, timezone
 from unittest.mock import patch, MagicMock
-import dot_auditor
+import adot_census
 
 
 class TestUtilities:
@@ -20,23 +20,23 @@ class TestUtilities:
 
     def test_is_ip_valid_ipv4(self):
         """Test is_ip with valid IPv4 address."""
-        assert dot_auditor.is_ip("192.168.1.1") is True
-        assert dot_auditor.is_ip("8.8.8.8") is True
+        assert adot_census.is_ip("192.168.1.1") is True
+        assert adot_census.is_ip("8.8.8.8") is True
 
     def test_is_ip_valid_ipv6(self):
         """Test is_ip with valid IPv6 address."""
-        assert dot_auditor.is_ip("2001:4860:4860::8888") is True
-        assert dot_auditor.is_ip("::1") is True
+        assert adot_census.is_ip("2001:4860:4860::8888") is True
+        assert adot_census.is_ip("::1") is True
 
     def test_is_ip_invalid(self):
         """Test is_ip with invalid IP addresses."""
-        assert dot_auditor.is_ip("not-an-ip") is False
-        assert dot_auditor.is_ip("999.999.999.999") is False
-        assert dot_auditor.is_ip("") is False
+        assert adot_census.is_ip("not-an-ip") is False
+        assert adot_census.is_ip("999.999.999.999") is False
+        assert adot_census.is_ip("") is False
 
     def test_now_utc(self):
         """Test now_utc returns datetime with UTC timezone."""
-        result = dot_auditor.now_utc()
+        result = adot_census.now_utc()
         assert isinstance(result, datetime)
         assert result.tzinfo == timezone.utc
 
@@ -47,7 +47,7 @@ class TestCertHelpers:
     def test_extract_cns_empty(self):
         """Test extract_cns with empty cert."""
         cert = {}
-        assert dot_auditor.extract_cns(cert) == []
+        assert adot_census.extract_cns(cert) == []
 
     def test_extract_cns_single_cn(self):
         """Test extract_cns with single CommonName."""
@@ -56,7 +56,7 @@ class TestCertHelpers:
                 (("commonName", "example.com"),),
             )
         }
-        assert dot_auditor.extract_cns(cert) == ["example.com"]
+        assert adot_census.extract_cns(cert) == ["example.com"]
 
     def test_extract_cns_multiple_cn(self):
         """Test extract_cns with multiple CommonNames (de-duped)."""
@@ -67,7 +67,7 @@ class TestCertHelpers:
                 (("commonName", "test.com"),),
             )
         }
-        result = dot_auditor.extract_cns(cert)
+        result = adot_census.extract_cns(cert)
         assert "example.com" in result
         assert "test.com" in result
         assert len(result) == 2  # de-duped
@@ -82,7 +82,7 @@ class TestCertHelpers:
                 ("IP Address", "192.168.1.1"),
             )
         }
-        cn_list, san_dns, san_ips = dot_auditor.names_from_cert(cert)
+        cn_list, san_dns, san_ips = adot_census.names_from_cert(cert)
 
         assert cn_list == ["example.com"]
         assert san_dns == ["www.example.com", "mail.example.com"]
@@ -99,7 +99,7 @@ class TestCertHelpers:
             "subject": ((("commonName", "192.0.2.1"),),),
             "subjectAltName": (("DNS", "example.com"),),  # no IP SAN
         }
-        cn_list, san_dns, san_ips = dot_auditor.names_from_cert(cert)
+        cn_list, san_dns, san_ips = adot_census.names_from_cert(cert)
 
         assert cn_list == ["192.0.2.1"]
         assert san_ips == []  # the CN's IP did not leak into the SAN-IP list
@@ -119,7 +119,7 @@ class TestCertHelpers:
                 ("IP Address", "108.61.171.156"),
             )
         }
-        _, _, san_ips = dot_auditor.names_from_cert(cert)
+        _, _, san_ips = adot_census.names_from_cert(cert)
 
         assert "2001:19f0:6c00:8501:5400:ff:fe04:3f" in san_ips
         assert "2001:41d0:305:2100::643a" in san_ips
@@ -131,7 +131,7 @@ class TestCertHelpers:
             "notBefore": "Jan 1 00:00:00 2025 GMT",
             "notAfter": "Dec 31 23:59:59 2025 GMT"
         }
-        nb, na = dot_auditor.parse_times(cert)
+        nb, na = adot_census.parse_times(cert)
 
         assert isinstance(nb, datetime)
         assert isinstance(na, datetime)
@@ -145,7 +145,7 @@ class TestCertHelpers:
             "notBefore": "invalid date",
             "notAfter": None
         }
-        nb, na = dot_auditor.parse_times(cert)
+        nb, na = adot_census.parse_times(cert)
 
         assert nb is None
         assert na is None
@@ -153,11 +153,11 @@ class TestCertHelpers:
 class TestDNSHelpers:
     """Test DNS helper functions."""
 
-    @patch('dot_auditor.dns.resolver.Resolver')
+    @patch('adot_census.dns.resolver.Resolver')
     def test_dns_get_ns_success(self, mock_resolver_class):
         """Test dns_get_ns with successful response."""
         # Clear cache before test
-        dot_auditor._dns_ns_cache.clear()
+        adot_census._dns_ns_cache.clear()
 
         # Mock the resolver
         mock_resolver = MagicMock()
@@ -168,28 +168,28 @@ class TestDNSHelpers:
         mock_rr.target = "ns1.example.com."
         mock_resolver.resolve.return_value = [mock_rr]
 
-        result = dot_auditor.dns_get_ns("example.com")
+        result = adot_census.dns_get_ns("example.com")
 
         assert result == ["ns1.example.com"]
-        assert "example.com" in dot_auditor._dns_ns_cache
+        assert "example.com" in adot_census._dns_ns_cache
 
-    @patch('dot_auditor.dns.resolver.Resolver')
+    @patch('adot_census.dns.resolver.Resolver')
     def test_dns_get_ns_cached(self, mock_resolver_class):
         """Test dns_get_ns returns cached result."""
         # Set cache
-        dot_auditor._dns_ns_cache["test.com"] = ["cached.ns.com"]
+        adot_census._dns_ns_cache["test.com"] = ["cached.ns.com"]
 
-        result = dot_auditor.dns_get_ns("test.com")
+        result = adot_census.dns_get_ns("test.com")
 
         assert result == ["cached.ns.com"]
         # Resolver should not be called for cached result
         mock_resolver_class.assert_not_called()
 
-    @patch('dot_auditor.dns.resolver.Resolver')
+    @patch('adot_census.dns.resolver.Resolver')
     def test_dns_get_addrs_success(self, mock_resolver_class):
         """Test dns_get_addrs with successful A/AAAA responses."""
         # Clear cache before test
-        dot_auditor._dns_addr_cache.clear()
+        adot_census._dns_addr_cache.clear()
 
         mock_resolver = MagicMock()
         mock_resolver_class.return_value = mock_resolver
@@ -207,7 +207,7 @@ class TestDNSHelpers:
             [mock_aaaa]  # AAAA record response
         ]
 
-        result = dot_auditor.dns_get_addrs("example.com")
+        result = adot_census.dns_get_addrs("example.com")
 
         assert "192.168.1.1" in result
         assert "2001:db8::1" in result
@@ -218,11 +218,11 @@ class TestIntegration:
 
     def test_check_row_structure(self):
         """Test that check_row returns properly structured dict."""
-        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
-            with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.find_matching_ns_for_ip', return_value=[]):
+            with patch('adot_census.tls_handshake_to_ip',
                       return_value=(False, None, None, "timeout",
-                                    dot_auditor.ERR_TRANSPORT)):
-                result = dot_auditor.check_row("192.168.1.1", "example.com", 853, 5.0)
+                                    adot_census.ERR_TRANSPORT)):
+                result = adot_census.check_row("192.168.1.1", "example.com", 853, 5.0)
 
                 # Verify all expected keys are present
                 expected_keys = {
@@ -245,20 +245,20 @@ class TestNormalizeIP:
 
     def test_uppercase_ipv6_is_lowercased(self):
         """getpeercert() emits uppercase hex digits."""
-        assert dot_auditor.normalize_ip("2001:19F0:6C00::3F") == "2001:19f0:6c00::3f"
+        assert adot_census.normalize_ip("2001:19F0:6C00::3F") == "2001:19f0:6c00::3f"
 
     def test_uncompressed_ipv6_is_compressed(self):
         """getpeercert() emits runs of zeroes in full."""
-        assert (dot_auditor.normalize_ip("2001:41D0:305:2100:0:0:0:643A")
+        assert (adot_census.normalize_ip("2001:41D0:305:2100:0:0:0:643A")
                 == "2001:41d0:305:2100::643a")
 
     def test_ipv4_is_unchanged(self):
         """IPv4 already has a single textual form."""
-        assert dot_auditor.normalize_ip("108.61.171.156") == "108.61.171.156"
+        assert adot_census.normalize_ip("108.61.171.156") == "108.61.171.156"
 
     def test_unparseable_is_returned_verbatim(self):
         """Never discard text we failed to understand."""
-        assert dot_auditor.normalize_ip("not-an-ip") == "not-an-ip"
+        assert adot_census.normalize_ip("not-an-ip") == "not-an-ip"
 
 
 class TestConnectedIPInCert:
@@ -272,10 +272,10 @@ class TestConnectedIPInCert:
             "issuer": ((("commonName", "Example CA"),),),
             "subjectAltName": (("IP Address", san_ip),),
         }
-        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
-            with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.find_matching_ns_for_ip', return_value=[]):
+            with patch('adot_census.tls_handshake_to_ip',
                       return_value=(True, cert, peer_ip, None, None)):
-                result = dot_auditor.check_row(peer_ip, "example.com", 853, 5.0)
+                result = adot_census.check_row(peer_ip, "example.com", 853, 5.0)
                 return result["connected_ip_in_cert"]
 
     def test_ipv6_matches_despite_uppercase_uncompressed_san(self):
@@ -307,10 +307,10 @@ class TestConnectedIPInCert:
             "issuer": ((("commonName", "Example CA"),),),
             "subjectAltName": (("DNS", "example.com"),),  # no IP SAN
         }
-        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
-            with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.find_matching_ns_for_ip', return_value=[]):
+            with patch('adot_census.tls_handshake_to_ip',
                       return_value=(True, cert, "192.0.2.1", None, None)):
-                result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
+                result = adot_census.check_row("192.0.2.1", "example.com", 853, 5.0)
         assert result["connected_ip_in_cert"] is False
 
 
@@ -319,18 +319,18 @@ class TestVerifyTrust:
 
     def test_trusted_chain(self):
         """A validating chain returns (True, None)."""
-        with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.tls_handshake_to_ip',
                    return_value=(True, {}, "192.0.2.1", None, None)) as m:
-            assert dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
+            assert adot_census.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
             assert m.call_count == 1
 
     def test_verification_failure_is_untrusted_and_not_retried(self):
         """A certificate rejection is deterministic: report False, do not retry."""
         err = "SSLCertVerificationError: [SSL: CERTIFICATE_VERIFY_FAILED] unable to get issuer"
-        with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.tls_handshake_to_ip',
                    return_value=(False, None, None, err,
-                                 dot_auditor.ERR_VERIFY)) as m:
-            trusted, msg = dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0)
+                                 adot_census.ERR_VERIFY)) as m:
+            trusted, msg = adot_census.verify_trust("192.0.2.1", 853, "h", 5.0)
             assert trusted is False
             assert msg == err
             assert m.call_count == 1  # not retried
@@ -338,21 +338,21 @@ class TestVerifyTrust:
     def test_transport_failure_is_unknown_after_retry(self):
         """A timeout on the trust handshake yields unknown (None), retried once first."""
         err = "TimeoutError: timed out"
-        with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.tls_handshake_to_ip',
                    return_value=(False, None, None, err,
-                                 dot_auditor.ERR_TRANSPORT)) as m:
-            trusted, msg = dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0)
+                                 adot_census.ERR_TRANSPORT)) as m:
+            trusted, msg = adot_census.verify_trust("192.0.2.1", 853, "h", 5.0)
             assert trusted is None
             assert msg == err
             assert m.call_count == 2  # initial attempt + one retry
 
     def test_retry_recovers_from_a_transient_failure(self):
         """If the retry succeeds, the chain is trusted."""
-        with patch('dot_auditor.tls_handshake_to_ip', side_effect=[
-            (False, None, None, "TimeoutError: timed out", dot_auditor.ERR_TRANSPORT),
+        with patch('adot_census.tls_handshake_to_ip', side_effect=[
+            (False, None, None, "TimeoutError: timed out", adot_census.ERR_TRANSPORT),
             (True, {}, "192.0.2.1", None, None),
         ]) as m:
-            assert dot_auditor.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
+            assert adot_census.verify_trust("192.0.2.1", 853, "h", 5.0) == (True, None)
             assert m.call_count == 2
 
     def test_check_row_reports_unknown_trust_on_transport_error(self):
@@ -363,15 +363,15 @@ class TestVerifyTrust:
             "subjectAltName": (("DNS", "h.example"),),
         }
         transport_fail = (False, None, None, "TimeoutError: timed out",
-                          dot_auditor.ERR_TRANSPORT)
+                          adot_census.ERR_TRANSPORT)
         # First call (verify=False) returns the cert; trust-check calls time out.
-        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
-            with patch('dot_auditor.tls_handshake_to_ip', side_effect=[
+        with patch('adot_census.find_matching_ns_for_ip', return_value=[]):
+            with patch('adot_census.tls_handshake_to_ip', side_effect=[
                 (True, cert, "192.0.2.1", None, None),
                 transport_fail,
                 transport_fail,
             ]):
-                result = dot_auditor.check_row("192.0.2.1", "h.example", 853, 5.0)
+                result = adot_census.check_row("192.0.2.1", "h.example", 853, 5.0)
         assert result["issued_by_trusted_ca"] is None  # unknown, not False
         assert "TimeoutError" in result["trust_error"]
 
@@ -382,10 +382,10 @@ class TestSelfSigned:
     @staticmethod
     def _self_signed_for(cert):
         """Run check_row against a canned certificate and return is_self_signed."""
-        with patch('dot_auditor.find_matching_ns_for_ip', return_value=[]):
-            with patch('dot_auditor.tls_handshake_to_ip',
+        with patch('adot_census.find_matching_ns_for_ip', return_value=[]):
+            with patch('adot_census.tls_handshake_to_ip',
                       return_value=(True, cert, "192.0.2.1", None, None)):
-                result = dot_auditor.check_row("192.0.2.1", "example.com", 853, 5.0)
+                result = adot_census.check_row("192.0.2.1", "example.com", 853, 5.0)
                 return result["is_self_signed"]
 
     def test_matching_dns_is_self_signed(self):
@@ -441,9 +441,9 @@ class TestDerCertToDict:
 
     def test_unparseable_extension_keeps_names_and_validity(self):
         """A malformed extension must not discard the subject, issuer and validity."""
-        cert = dot_auditor.der_cert_to_dict(_ENCODED_DEFAULT_CERT_DER)
-        assert dot_auditor.extract_cns(cert) == ["CN"]
-        assert dot_auditor.extract_issuer_cn(cert) == "vpue (CN)"
+        cert = adot_census.der_cert_to_dict(_ENCODED_DEFAULT_CERT_DER)
+        assert adot_census.extract_cns(cert) == ["CN"]
+        assert adot_census.extract_issuer_cn(cert) == "vpue (CN)"
         assert cert["notAfter"] == "Dec 09 08:31:26 2120 GMT"
 
 
@@ -457,11 +457,11 @@ class TestUnverifiedRetry:
         verified_ctx.wrap_socket.side_effect = ssl.SSLCertVerificationError(
             "certificate verify failed: self-signed certificate")
         addr = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.0.2.1", 853))]
-        with patch('dot_auditor.socket.getaddrinfo', return_value=addr), \
-                patch('dot_auditor.socket.socket'), \
-                patch('dot_auditor.ssl.create_default_context', return_value=verified_ctx), \
-                patch('dot_auditor.ssl.SSLContext', return_value=retry_ctx):
-            return dot_auditor.tls_handshake_to_ip("192.0.2.1", 853, "ns.example", 5.0)
+        with patch('adot_census.socket.getaddrinfo', return_value=addr), \
+                patch('adot_census.socket.socket'), \
+                patch('adot_census.ssl.create_default_context', return_value=verified_ctx), \
+                patch('adot_census.ssl.SSLContext', return_value=retry_ctx):
+            return adot_census.tls_handshake_to_ip("192.0.2.1", 853, "ns.example", 5.0)
 
     @staticmethod
     def _retry_ctx_serving(der):
@@ -479,7 +479,7 @@ class TestUnverifiedRetry:
         assert ok is True
         assert err is None
         assert peer == "192.0.2.1"
-        assert dot_auditor.extract_cns(cert) == ["CN"]
+        assert adot_census.extract_cns(cert) == ["CN"]
 
     def test_retry_error_is_reported(self):
         """When the retry itself fails, its error must appear next to the verify error."""
@@ -489,7 +489,7 @@ class TestUnverifiedRetry:
         assert ok is False
         assert err.startswith("SSLCertVerificationError")
         assert "unverified retry: TimeoutError: timed out" in err
-        assert kind == dot_auditor.ERR_VERIFY
+        assert kind == adot_census.ERR_VERIFY
 
     def test_unparseable_retry_certificate_is_reported(self):
         """A retry that gets a certificate cryptography cannot load says so."""
@@ -504,72 +504,72 @@ class TestInputValidation:
     def test_invalid_port_low(self, capsys):
         """Test port validation with value too low."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--port=0']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--port=0']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Port must be between 1 and 65535" in str(exc.value.code)
 
     def test_invalid_port_high(self, capsys):
         """Test port validation with value too high."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--port=65536']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--port=65536']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Port must be between 1 and 65535" in str(exc.value.code)
 
     def test_invalid_timeout_zero(self, capsys):
         """Test timeout validation with zero value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--timeout=0']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--timeout=0']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Timeout must be positive" in str(exc.value.code)
 
     def test_invalid_timeout_negative(self, capsys):
         """Test timeout validation with negative value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--timeout=-1']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--timeout=-1']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Timeout must be positive" in str(exc.value.code)
 
     def test_invalid_workers_zero(self, capsys):
         """Test workers validation with zero value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--workers=0']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--workers=0']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Workers must be at least 1" in str(exc.value.code)
 
     def test_invalid_workers_negative(self, capsys):
         """Test workers validation with negative value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--workers=-1']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--workers=-1']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Workers must be at least 1" in str(exc.value.code)
 
     def test_invalid_ip_column(self, capsys):
         """Test IP column validation with negative value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--ip-col=-1']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--ip-col=-1']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Column indices must be non-negative" in str(exc.value.code)
 
     def test_invalid_domain_column(self, capsys):
         """Test domain column validation with negative value."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', 'test.csv', '--domain-col=-1']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', 'test.csv', '--domain-col=-1']):
+                adot_census.main()
 
         assert exc.value.code == 1 or "Column indices must be non-negative" in str(exc.value.code)
 
     def test_file_not_found(self, capsys):
         """Test handling of non-existent CSV file."""
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', '/nonexistent/file.csv']):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', '/nonexistent/file.csv']):
+                adot_census.main()
 
         assert exc.value.code == 1 or ("File" in str(exc.value.code) and "not found" in str(exc.value.code))
 
@@ -579,8 +579,8 @@ class TestInputValidation:
         empty_file.write_text("")
 
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', str(empty_file)]):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', str(empty_file)]):
+                adot_census.main()
 
         assert exc.value.code == 1 or "No valid IP/domain pairs found" in str(exc.value.code)
 
@@ -590,8 +590,8 @@ class TestInputValidation:
         csv_file.write_text("invalid-ip,example.com\n")
 
         with pytest.raises(SystemExit) as exc:
-            with patch('sys.argv', ['dot_auditor.py', str(csv_file)]):
-                dot_auditor.main()
+            with patch('sys.argv', ['adot_census.py', str(csv_file)]):
+                adot_census.main()
 
         assert exc.value.code == 1 or "No valid IP/domain pairs found" in str(exc.value.code)
         captured = capsys.readouterr()
@@ -609,9 +609,9 @@ class TestInputValidation:
         def fake_check_row(ip, domain, port, timeout):
             return {"ip": ip, "domain": domain}
 
-        with patch('dot_auditor.check_row', side_effect=fake_check_row):
-            with patch('sys.argv', ['dot_auditor.py', str(csv_file)]):
-                dot_auditor.main()
+        with patch('adot_census.check_row', side_effect=fake_check_row):
+            with patch('sys.argv', ['adot_census.py', str(csv_file)]):
+                adot_census.main()
 
         envelope = json.loads(capsys.readouterr().out)
         domains = {r["domain"] for r in envelope["results"]}
@@ -622,17 +622,17 @@ class TestInputValidation:
         csv_file = tmp_path / "one.csv"
         csv_file.write_text("1.1.1.1,example.com\n")
 
-        with patch('dot_auditor.check_row',
+        with patch('adot_census.check_row',
                    side_effect=lambda ip, domain, port, timeout: {
                        "ip": ip, "domain": domain}):
             with patch('sys.argv',
-                       ['dot_auditor.py', str(csv_file), '--port', '853']):
-                dot_auditor.main()
+                       ['adot_census.py', str(csv_file), '--port', '853']):
+                adot_census.main()
 
         env = json.loads(capsys.readouterr().out)
-        assert env["schema_version"] == dot_auditor.SCHEMA_VERSION
-        assert env["tool"] == "dot_auditor"
-        assert env["tool_version"] == dot_auditor.__version__
+        assert env["schema_version"] == adot_census.SCHEMA_VERSION
+        assert env["tool"] == "adot_census"
+        assert env["tool_version"] == adot_census.__version__
         assert env["source"] == "one"
         assert env["params"]["port"] == 853
         assert isinstance(env["generated_at"], str)

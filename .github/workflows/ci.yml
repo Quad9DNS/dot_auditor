@@ -28,15 +28,15 @@ jobs:
 
     - name: Run mypy
       run: |
-        python -m mypy dot_auditor.py dot_report.py
+        python -m mypy adot_census.py adot_report.py
 
     - name: Run pylint
       run: |
-        python -m pylint dot_auditor.py dot_report.py --fail-under=9.5
+        python -m pylint adot_census.py adot_report.py --fail-under=9.5
 
     - name: Run pytest
       run: |
-        python -m pytest -v --cov=dot_auditor --cov=dot_report --cov-report=term-missing --cov-report=xml
+        python -m pytest -v --cov=adot_census --cov=adot_report --cov-report=term-missing --cov-report=xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5  # v7.1.1
