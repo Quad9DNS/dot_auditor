@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-DoT (DNS-over-TLS) Auditor - A security audit tool for DNS-over-TLS servers.
+ADoT Census collector: DNS-over-TLS on authoritative DNS servers.
 
-Analyzes TLS certificates on DNS servers running on port 853, performing
-comprehensive certificate validation and reporting.
+Connects to authoritative servers on port 853, records their TLS certificates
+and chain trust, and writes a JSON audit for adot_report.py to render.
 
 SPDX-License-Identifier: BSD-2-Clause
 """
@@ -27,10 +27,10 @@ from cryptography.x509 import SubjectAlternativeName
 
 DEFAULT_PORT = 853
 
-__version__ = "1.0.0"
+__version__ = "2.0.0"
 
 # Layout of the JSON audit this tool emits. Bump when a record field or the
-# envelope changes incompatibly; dot_report.py checks this before rendering.
+# envelope changes incompatibly; adot_report.py checks this before rendering.
 # v2 added the tri-state issued_by_trusted_ca (null = trust check unavailable)
 # and the trust_error field.
 SCHEMA_VERSION = 2
@@ -390,11 +390,11 @@ def check_row(ip: str, domain: str, port: int, timeout: float) -> dict:
 
 
 def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too-many-locals
-    """Main entry point for the DoT Auditor CLI."""
+    """Main entry point for the ADoT Census collector."""
     ap = argparse.ArgumentParser(
         description=(
             "Check DoT (TLS/853) servers from CSV, map IP->NS hostname, use it as "
-            "SNI, and emit a JSON audit. Render it with dot_report.py."
+            "SNI, and emit a JSON audit. Render it with adot_report.py."
         )
     )
     ap.add_argument("csv_file", help="CSV with at least two columns: IP,domain.")
@@ -483,7 +483,7 @@ def main() -> None:  # pylint: disable=too-many-statements,too-many-branches,too
     envelope = {
         "schema_version": SCHEMA_VERSION,
         "generated_at": now_utc().isoformat(),
-        "tool": "dot_auditor",
+        "tool": "adot_census",
         "tool_version": __version__,
         "source": csv_name,
         "params": {"port": args.port, "timeout": args.timeout},

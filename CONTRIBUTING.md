@@ -1,11 +1,11 @@
-# Contributing to DoT Auditor
+# Contributing to ADoT Census
 
 ## Development Setup
 
 ```bash
 # Clone the repository
-git clone https://github.com/Quad9DNS/dot_auditor.git
-cd dot_auditor
+git clone https://github.com/Quad9DNS/adot-census.git
+cd adot-census
 
 # Install dependencies
 pip install -r requirements.txt
@@ -18,17 +18,17 @@ pip install -r requirements.txt
 python3 -m pytest -v
 
 # Run with coverage
-python3 -m pytest --cov=dot_auditor --cov=dot_report --cov-report=term-missing
+python3 -m pytest --cov=adot_census --cov=adot_report --cov-report=term-missing
 ```
 
 ## Code Quality
 
 ```bash
 # Type checking
-python3 -m mypy dot_auditor.py dot_report.py
+python3 -m mypy adot_census.py adot_report.py
 
 # Linting
-python3 -m pylint dot_auditor.py dot_report.py
+python3 -m pylint adot_census.py adot_report.py
 ```
 
 ## Quality Standards
