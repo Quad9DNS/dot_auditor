@@ -4,7 +4,10 @@ Unit tests for DoT Auditor.
 SPDX-License-Identifier: BSD-2-Clause
 """
 
+import base64
 import json
+import socket
+import ssl
 
 import pytest
 from datetime import datetime, timezone
@@ -417,6 +420,82 @@ class TestSelfSigned:
     def test_absent_dns_is_unknown(self):
         """A cert dict lacking the fields entirely tells us nothing."""
         assert self._self_signed_for({"notAfter": "Jan 1 00:00:00 2030 GMT"}) is None
+
+
+# Served on port 853 by the dns-vip.com name servers (for example 43.134.58.165).
+# Its BasicConstraints encodes cA=FALSE explicitly, which DER forbids, so
+# cryptography refuses to parse the certificate's extensions.
+_ENCODED_DEFAULT_CERT_DER = base64.b64decode(
+    "MIIBZzCCARmgAwIBAgIIP06QPO9pouMwBQYDK2VwMCkxCzAJBgNVBAYMAkNOMQ0wCwYDVQQKDAR2"
+    "cHVlMQswCQYDVQQDDAJDTjAgFw0yMjA1MTcwODMxMjZaGA8yMTIwMTIwOTA4MzEyNlowKTELMAkG"
+    "A1UEBgwCQ04xDTALBgNVBAoMBHZwdWUxCzAJBgNVBAMMAkNOMCowBQYDK2VwAyEAchvNHh72xAug"
+    "Ew+mrMEXiP7fRJyoXK4xmARAHJ0NSkWjXTBbMCUGA1UdEQQeMByCC3ZwdWVkbnMuY29tgg0qLnZw"
+    "dWVkbnMuY29tMBMGA1UdJQQMMAoGCCsGAQUFBwMBMAwGA1UdEwQFMAMBAQAwDwYDVR0PAQH/BAUD"
+    "AwfgADAFBgMrZXADQQBQikXe0cXxGLJ7+40sSXiWFGSW/W86fCkVu9sUxJB4sHO1HK77sai98FiW"
+    "aQc+pdfG+Wiju9GKkCmQBZOKIHIN"
+)
+
+
+class TestDerCertToDict:
+    """Parse a certificate fetched without verification."""
+
+    def test_unparseable_extension_keeps_names_and_validity(self):
+        """A malformed extension must not discard the subject, issuer and validity."""
+        cert = dot_auditor.der_cert_to_dict(_ENCODED_DEFAULT_CERT_DER)
+        assert dot_auditor.extract_cns(cert) == ["CN"]
+        assert dot_auditor.extract_issuer_cn(cert) == "vpue (CN)"
+        assert cert["notAfter"] == "Dec 09 08:31:26 2120 GMT"
+
+
+class TestUnverifiedRetry:
+    """After a verification failure, the unverified retry fetches the certificate anyway."""
+
+    @staticmethod
+    def _handshake(retry_ctx):
+        """Run tls_handshake_to_ip where verification fails and retry_ctx does the retry."""
+        verified_ctx = MagicMock()
+        verified_ctx.wrap_socket.side_effect = ssl.SSLCertVerificationError(
+            "certificate verify failed: self-signed certificate")
+        addr = [(socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.0.2.1", 853))]
+        with patch('dot_auditor.socket.getaddrinfo', return_value=addr), \
+                patch('dot_auditor.socket.socket'), \
+                patch('dot_auditor.ssl.create_default_context', return_value=verified_ctx), \
+                patch('dot_auditor.ssl.SSLContext', return_value=retry_ctx):
+            return dot_auditor.tls_handshake_to_ip("192.0.2.1", 853, "ns.example", 5.0)
+
+    @staticmethod
+    def _retry_ctx_serving(der):
+        """A retry context whose handshake yields the given DER certificate."""
+        tls = MagicMock()
+        tls.getpeercert.return_value = der
+        tls.getpeername.return_value = ("192.0.2.1", 853)
+        ctx = MagicMock()
+        ctx.wrap_socket.return_value.__enter__.return_value = tls
+        return ctx
+
+    def test_retry_accepts_cert_with_unparseable_extension(self):
+        """The dns-vip.com certificate must count as a completed handshake."""
+        ok, cert, peer, err, _ = self._handshake(self._retry_ctx_serving(_ENCODED_DEFAULT_CERT_DER))
+        assert ok is True
+        assert err is None
+        assert peer == "192.0.2.1"
+        assert dot_auditor.extract_cns(cert) == ["CN"]
+
+    def test_retry_error_is_reported(self):
+        """When the retry itself fails, its error must appear next to the verify error."""
+        retry_ctx = MagicMock()
+        retry_ctx.wrap_socket.side_effect = TimeoutError("timed out")
+        ok, _, _, err, kind = self._handshake(retry_ctx)
+        assert ok is False
+        assert err.startswith("SSLCertVerificationError")
+        assert "unverified retry: TimeoutError: timed out" in err
+        assert kind == dot_auditor.ERR_VERIFY
+
+    def test_unparseable_retry_certificate_is_reported(self):
+        """A retry that gets a certificate cryptography cannot load says so."""
+        ok, _, _, err, _ = self._handshake(self._retry_ctx_serving(b"not a certificate"))
+        assert ok is False
+        assert "unverified retry: certificate could not be parsed" in err
 
 
 class TestInputValidation:

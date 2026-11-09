@@ -204,25 +204,30 @@ def der_cert_to_dict(der_bytes: bytes) -> dict:
             "notBefore": cert.not_valid_before_utc.strftime("%b %d %H:%M:%S %Y GMT"),
             "notAfter": cert.not_valid_after_utc.strftime("%b %d %H:%M:%S %Y GMT"),
         }
-
-        try:
-            san_ext = cert.extensions.get_extension_for_oid(
-                x509.ExtensionOID.SUBJECT_ALTERNATIVE_NAME
-            )
-            san_value = cast(SubjectAlternativeName, san_ext.value)
-            san_list = []
-            for name in san_value:
-                if isinstance(name, x509.DNSName):
-                    san_list.append(("DNS", name.value))
-                elif isinstance(name, x509.IPAddress):
-                    san_list.append(("IP Address", str(name.value)))
-            result["subjectAltName"] = tuple(san_list)
-        except x509.ExtensionNotFound:
-            pass
-
-        return result
     except Exception:
         return {}
+
+    try:
+        san_ext = cert.extensions.get_extension_for_oid(
+            x509.ExtensionOID.SUBJECT_ALTERNATIVE_NAME
+        )
+    except x509.ExtensionNotFound:
+        return result
+    except ValueError:
+        # cryptography rejects all extensions over one DER violation, such as
+        # an explicitly encoded default in BasicConstraints.
+        # TODO: recover the SAN from such certificates; for now it reads as empty.
+        return result
+
+    san_value = cast(SubjectAlternativeName, san_ext.value)
+    san_list = []
+    for name in san_value:
+        if isinstance(name, x509.DNSName):
+            san_list.append(("DNS", name.value))
+        elif isinstance(name, x509.IPAddress):
+            san_list.append(("IP Address", str(name.value)))
+    result["subjectAltName"] = tuple(san_list)
+    return result
 
 
 # Failure categories reported by tls_handshake_to_ip, so callers can tell a
@@ -252,6 +257,7 @@ def tls_handshake_to_ip(
 
     last_err: Exception | None = None
     last_kind: str | None = None
+    retry_note: str | None = None
     for family, socktype, proto, _, sockaddr in infos:
         try:
             with socket.socket(family, socktype, proto) as raw:
@@ -261,6 +267,7 @@ def tls_handshake_to_ip(
                 with ctx.wrap_socket(raw, server_hostname=sni_host) as tls:
                     return True, tls.getpeercert(), tls.getpeername()[0], None, None
         except ssl.SSLCertVerificationError as e:
+            retry_note = None
             if not verify:
                 try:
                     with socket.socket(family, socktype, proto) as raw:
@@ -277,15 +284,18 @@ def tls_handshake_to_ip(
                             peer_ip = tls.getpeername()[0]
                             if der_cert and (cert_dict := der_cert_to_dict(der_cert)):
                                 return True, cert_dict, peer_ip, None, None
-                except Exception:
-                    pass
+                            retry_note = "unverified retry: certificate could not be parsed"
+                except Exception as retry_err:
+                    retry_note = f"unverified retry: {type(retry_err).__name__}: {retry_err}"
             last_err, last_kind = e, ERR_VERIFY
         except (OSError, ssl.SSLError, TimeoutError) as e:
-            last_err, last_kind = e, ERR_TRANSPORT
+            last_err, last_kind, retry_note = e, ERR_TRANSPORT, None
 
     error_msg = (
         f"{type(last_err).__name__}: {last_err}" if last_err else "connection failed"
     )
+    if retry_note:
+        error_msg += f"; {retry_note}"
     return False, None, None, error_msg, (last_kind or ERR_TRANSPORT)
 
 
