@@ -1,0 +1,27 @@
+---
+layout: null
+---
+{%- comment -%}
+Pages builds with Jekyll in safe mode, which ignores symlinks, so the newest
+report is chosen at build time. Reports are named YYYYMMDD, so the last by name is newest.
+{%- endcomment -%}
+{%- assign reports = site.static_files | where: "extname", ".html" | where_exp: "f", "f.path contains '/output/20'" | sort: "name" -%}
+{%- assign newest = reports | last -%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Latest ADoT Census report</title>
+{%- if newest %}
+<meta http-equiv="refresh" content="0; url={{ newest.path | remove_first: '/' }}">
+{%- endif %}
+</head>
+<body>
+{%- if newest %}
+<p>The latest report is <a href="{{ newest.path | remove_first: '/' }}">{{ newest.basename }}</a>.</p>
+{%- else %}
+<p>No report has been published yet. See the <a href="./">project page</a>.</p>
+{%- endif %}
+</body>
+</html>
