@@ -170,11 +170,25 @@ class TestHtmlDensity:
         assert "<details" in out
         assert "ns11.example.com" in out  # hidden name still present for filtering
 
-    def test_uses_datatables_2_3(self):
-        """The report pulls the pinned DataTables release."""
+    def test_uses_datatables_3_without_jquery(self):
+        """The report pulls the pinned DataTables release, which no longer needs jQuery."""
         out = adot_report.format_html([_result()])
-        assert "datatables.net/2.3.8/" in out
-        assert "jquery-3.7.1" in out
+        assert "datatables.net/3.1.5/" in out
+        assert "jquery" not in out.lower()
+        assert "$(" not in out
+
+    def test_footer_note_is_plain_html(self):
+        """The credit line is part of the page, so it shows even if the script fails."""
+        out = adot_report.format_html([_result()], provenance="Source: sample")
+        without_scripts = re.sub(r"<script\b.*?</script>", "", out, flags=re.S)
+        assert 'href="https://github.com/Quad9DNS/adot-census"' in without_scripts
+
+    def test_column_filters_turn_off_autocomplete(self):
+        """Browser autofill must not cover the table under a filter box."""
+        out = adot_report.format_html([_result()])
+        inputs = re.findall(r"<input\b[^>]*>", out)
+        assert inputs
+        assert all('autocomplete="off"' in i for i in inputs)
 
 
 class TestOutputInjection:
