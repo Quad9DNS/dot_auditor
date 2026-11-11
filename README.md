@@ -187,7 +187,7 @@ Features:
 
 The HTML output uses monospace fonts for technical data (IPs, domains, hostnames) and includes all certificate details in a clean, professional format.
 
-Interactive features powered by [DataTables](https://datatables.net/) - a powerful jQuery plugin for enhanced HTML tables.
+Interactive features use [DataTables](https://datatables.net/) 3, loaded from its CDN. The report does not load jQuery.
 
 **Sample Reports**: View live examples of HTML and Markdown output:
 - [Latest HTML Report](https://quad9dns.github.io/adot-census/latest), which redirects to the newest dated report
@@ -242,7 +242,7 @@ This project relies on the following excellent open-source libraries:
 
 - **[dnspython](https://www.dnspython.org/)** - DNS toolkit for Python
 - **[cryptography](https://cryptography.io/)** - Cryptographic recipes and primitives
-- **[DataTables](https://datatables.net/)** - jQuery plugin for interactive HTML tables (used in HTML output)
+- **[DataTables](https://datatables.net/)** - JavaScript library for interactive HTML tables (used in HTML output)
 
 ## License
 

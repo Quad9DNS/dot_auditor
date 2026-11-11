@@ -214,6 +214,7 @@ def format_html(
     table.dataTable tfoot input:focus { outline: none; border-color: #4a90e2; box-shadow: 0 0 3px rgba(74, 144, 226, 0.5); }
     .tooltip-hint { font-size: 13px; color: #666; margin-top: 5px; font-style: italic; }
     .provenance { font-size: 13px; color: #666; margin: 4px 0 0; }
+    .report-footer { text-align: center; margin-top: 20px; color: #666; }
     .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
     .pill.ok { background: #e4f5e8; color: #1a7f37; }
     .pill.bad { background: #fce4e4; color: #b42318; }
@@ -255,7 +256,7 @@ def format_html(
         '  <meta name="generator" content="ADoT Census" />',
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />',
         f"  <title>{_h(title)}</title>",
-        '  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" />',
+        '  <link rel="stylesheet" href="https://cdn.datatables.net/3.1.5/css/dataTables.dataTables.min.css" />',
         f"  <style>{css}</style>",
         "</head>",
         "<body>",
@@ -270,7 +271,7 @@ def format_html(
             "<thead><tr>" + "".join(f'<th title="{desc}">{name}</th>' for name, desc in headers_with_tooltips) + "</tr></thead>",
             "<tfoot><tr>"
             + "".join(
-                f'<th><input type="text" placeholder="Filter {h}" style="width:100%; box-sizing:border-box;" /></th>'
+                f'<th><input type="text" placeholder="Filter {h}" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th>'
                 for h in headers
             )
             + "</tr></tfoot>",
@@ -318,35 +319,29 @@ def format_html(
         [
             "</tbody>",
             "</table>",
-            '<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>',
-            '<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>',
+            f'<p class="report-footer">{footer}</p>',
+            '<script src="https://cdn.datatables.net/3.1.5/js/dataTables.min.js"></script>',
             "<script>",
-            "$(document).ready(function() {",
-            '  var table = $("#auditTable").DataTable({',
-            '    "pageLength": -1,',
-            '    "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],',
-            '    "order": [],',
-            '    "columnDefs": [{ "orderable": true, "targets": "_all" }],',
-            '    "dom": "lfrtip<\\"bottom-info\\">",',
-            '    "language": {',
-            '      "search": "Filter records:",',
-            '      "lengthMenu": "Show _MENU_ entries per page",',
-            '      "info": "Showing _START_ to _END_ of _TOTAL_ servers"',
-            "    },",
-            '    "drawCallback": function() {',
-            f'      $(".bottom-info").html(\'<div style="text-align: center; margin-top: 20px; color: #666;">{footer}</div>\');',
-            "    },",
-            '    "initComplete": function() {',
-            "      this.api().columns().every(function() {",
-            "        var column = this;",
-            "        $('input', this.footer()).on('keyup change clear', function() {",
-            "          if (column.search() !== this.value) {",
-            "            column.search(this.value).draw();",
-            "          }",
-            "        });",
+            'new DataTable("#auditTable", {',
+            '  "pageLength": -1,',
+            '  "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],',
+            '  "order": [],',
+            '  "columnDefs": [{ "orderable": true, "targets": "_all" }],',
+            '  "language": {',
+            '    "search": "Filter records:",',
+            '    "lengthMenu": "Show _MENU_ entries per page",',
+            '    "info": "Showing _START_ to _END_ of _TOTAL_ servers"',
+            "  },",
+            '  "initComplete": function() {',
+            "    this.api().columns().every(function() {",
+            "      var column = this;",
+            '      column.footer().querySelector("input").addEventListener("input", function() {',
+            "        if (column.search() !== this.value) {",
+            "          column.search(this.value).draw();",
+            "        }",
             "      });",
-            "    }",
-            "  });",
+            "    });",
+            "  }",
             "});",
             "</script>",
             "</body>",
