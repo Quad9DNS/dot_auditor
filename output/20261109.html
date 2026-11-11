@@ -5,7 +5,7 @@
   <meta name="generator" content="ADoT Census" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>DoT Audit Report: ns-input-202611</title>
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css" />
+  <link rel="stylesheet" href="https://cdn.datatables.net/3.1.5/css/dataTables.dataTables.min.css" />
   <style>
     body { margin: 0; padding: 10px; font-family: Arial, sans-serif; }
     td.monospace { font-family: Consolas, monospace; font-size: 12px; }
@@ -17,6 +17,7 @@
     table.dataTable tfoot input:focus { outline: none; border-color: #4a90e2; box-shadow: 0 0 3px rgba(74, 144, 226, 0.5); }
     .tooltip-hint { font-size: 13px; color: #666; margin-top: 5px; font-style: italic; }
     .provenance { font-size: 13px; color: #666; margin: 4px 0 0; }
+    .report-footer { text-align: center; margin-top: 20px; color: #666; }
     .pill { display: inline-block; padding: 1px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; }
     .pill.ok { background: #e4f5e8; color: #1a7f37; }
     .pill.bad { background: #fce4e4; color: #b42318; }
@@ -35,7 +36,7 @@
 <p class="tooltip-hint">Hover over column headers for descriptions</p>
 <table id="auditTable" class="display" style="width:100%;">
 <thead><tr><th title="IP address being audited">IP</th><th title="Domain name associated with the IP">Domain</th><th title="Server Name Indication used in TLS handshake">SNI Used</th><th title="NS hostnames that resolve to this IP">Matching NS</th><th title="TLS handshake result (OK, NO CERT if no leaf returned, or FAIL)">TLS</th><th title="Certificate chain validates against system CA store">Chain Trusted</th><th title="Connected IP address is listed in certificate's SAN IPs">IP in Cert</th><th title="Certificate validity relative to now">Expired</th><th title="Whether the leaf certificate is self-signed">Self-Signed</th><th title="Certificate issuer (CA organization and CN)">Issued By</th><th title="Common Name(s) from certificate subject">CN(s)</th><th title="DNS names from Subject Alternative Name extension">SAN DNS</th><th title="IP addresses from Subject Alternative Name extension">SAN IPs</th></tr></thead>
-<tfoot><tr><th><input type="text" placeholder="Filter IP" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Domain" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SNI Used" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Matching NS" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter TLS" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Chain Trusted" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter IP in Cert" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Expired" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Self-Signed" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Issued By" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter CN(s)" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SAN DNS" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SAN IPs" style="width:100%; box-sizing:border-box;" /></th></tr></tfoot>
+<tfoot><tr><th><input type="text" placeholder="Filter IP" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Domain" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SNI Used" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Matching NS" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter TLS" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Chain Trusted" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter IP in Cert" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Expired" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Self-Signed" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter Issued By" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter CN(s)" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SAN DNS" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th><th><input type="text" placeholder="Filter SAN IPs" autocomplete="off" style="width:100%; box-sizing:border-box;" /></th></tr></tfoot>
 <tbody>
 <tr><td class="monospace">103.129.122.188</td><td class="monospace">pmt.pf</td><td class="monospace">ns1.pmt.pf</td><td class="monospace">ns1.pmt.pf</td><td><span class="pill ok">OK</span></td><td><span class="pill ok">TRUSTED</span></td><td><span class="pill muted">NO</span></td><td><span class="pill ok">VALID</span></td><td><span class="pill ok">CA-ISSUED</span></td><td class="monospace">Let&#x27;s Encrypt (YR1)</td><td class="monospace">ns1.pmt.pf</td><td class="monospace">ns1.pmt.pf</td><td>-</td></tr>
 <tr><td class="monospace">103.129.123.188</td><td class="monospace">pmt.pf</td><td class="monospace">ns2.pmt.pf</td><td class="monospace">ns2.pmt.pf</td><td><span class="pill ok">OK</span></td><td><span class="pill ok">TRUSTED</span></td><td><span class="pill muted">NO</span></td><td><span class="pill ok">VALID</span></td><td><span class="pill ok">CA-ISSUED</span></td><td class="monospace">Let&#x27;s Encrypt (YR2)</td><td class="monospace">ns2.pmt.pf</td><td class="monospace">ns2.pmt.pf</td><td>-</td></tr>
@@ -1101,35 +1102,29 @@
 <tr><td class="monospace">2a01:6b0:1:2::225:56</td><td class="monospace">net.ua</td><td class="monospace">ns.net.ua</td><td class="monospace">ns.net.ua</td><td><span class="pill ok">OK</span></td><td><span class="pill bad">UNVERIFIED</span></td><td><span class="pill muted">NO</span></td><td><span class="pill ok">VALID</span></td><td><span class="pill bad">SELF-SIGNED</span></td><td class="monospace">&quot;COORDINATOR&quot; LTD (ns.net.ua)</td><td class="monospace">ns.net.ua</td><td>-</td><td>-</td></tr>
 </tbody>
 </table>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+<p class="report-footer">Generated with <a href="https://github.com/Quad9DNS/adot-census">ADoT Census</a>. Source: ns-input-202611, port 853. 1062 servers. Collected 2026-11-09T12:47:27.329295+00:00.</p>
+<script src="https://cdn.datatables.net/3.1.5/js/dataTables.min.js"></script>
 <script>
-$(document).ready(function() {
-  var table = $("#auditTable").DataTable({
-    "pageLength": -1,
-    "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
-    "order": [],
-    "columnDefs": [{ "orderable": true, "targets": "_all" }],
-    "dom": "lfrtip<\"bottom-info\">",
-    "language": {
-      "search": "Filter records:",
-      "lengthMenu": "Show _MENU_ entries per page",
-      "info": "Showing _START_ to _END_ of _TOTAL_ servers"
-    },
-    "drawCallback": function() {
-      $(".bottom-info").html('<div style="text-align: center; margin-top: 20px; color: #666;">Generated with <a href="https://github.com/Quad9DNS/adot-census">ADoT Census</a>. Source: ns-input-202611, port 853. 1062 servers. Collected 2026-11-09T12:47:27.329295+00:00.</div>');
-    },
-    "initComplete": function() {
-      this.api().columns().every(function() {
-        var column = this;
-        $('input', this.footer()).on('keyup change clear', function() {
-          if (column.search() !== this.value) {
-            column.search(this.value).draw();
-          }
-        });
+new DataTable("#auditTable", {
+  "pageLength": -1,
+  "lengthMenu": [[50, 100, 200, -1], [50, 100, 200, "All"]],
+  "order": [],
+  "columnDefs": [{ "orderable": true, "targets": "_all" }],
+  "language": {
+    "search": "Filter records:",
+    "lengthMenu": "Show _MENU_ entries per page",
+    "info": "Showing _START_ to _END_ of _TOTAL_ servers"
+  },
+  "initComplete": function() {
+    this.api().columns().every(function() {
+      var column = this;
+      column.footer().querySelector("input").addEventListener("input", function() {
+        if (column.search() !== this.value) {
+          column.search(this.value).draw();
+        }
       });
-    }
-  });
+    });
+  }
 });
 </script>
 </body>
