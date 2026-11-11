@@ -1060,3 +1060,12 @@
 2a01:239:0:80f8::1,m-online.net.
 2a01:4f8:c010:b4fc::1,wan64.de.
 2a01:6b0:1:2::225:56,net.ua.
+185.10.11.15,stapelektra.nl.
+195.206.121.15,savedruk.com.
+212.18.3.1,m-online.net.
+212.114.171.66,m-online.net.
+2001:67c:28cc::15,savedruk.com.
+2001:67c:2ee4:2232::35,net.ua.
+2001:a18:4:1::18,lu.
+2001:a60:0:10::53,m-online.net.
+2001:a60:0:21::53,m-online.net.
